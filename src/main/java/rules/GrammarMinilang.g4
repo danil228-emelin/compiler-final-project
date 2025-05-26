@@ -3,14 +3,23 @@ import CommonLexerRules;
 
 prog:   stat+ ;
 
-stat:   assignSt NEWLINE                  # assign
+stat:   assignSt NEWLINE            # assign
     |   ifStat                      # ifStatement
     |   whileStat                   # whileStatement
     |   NEWLINE                     # blank
     | LINE_COMMENT                  # comment
-    | variable_decl NEWLINE              # declaration
+    | COMMENT                       # multipleComment
+    | variable_decl NEWLINE         # declaration
+    | printing NEWLINE              # printSmth
     ;
 
+whileStat:  'while' expr block ;
+
+ifStat: IF expr THEN block ('else' block)? ;
+
+block: '{' stat* '}'                # multiple_logic_block
+        | stat                      # single_logic_block
+        ;
 
 assignSt: left_expr ASSIGN expr; # assignSt
 
@@ -33,6 +42,8 @@ printing: PRINT expr NEWLINE # printExpr
     |  PRINT STRING NEWLINE # printString
 
 //reserved words
+IF: 'if';
+THEN: 'then';
 ASSIGN: '=' ;
 VAR: 'var';
 PRINT: 'print';
