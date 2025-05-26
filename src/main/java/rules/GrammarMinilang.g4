@@ -31,6 +31,10 @@ expr: expr op=(MUL|DIV) expr         # mulDiv
     |   op=INT                      # value
     |   op=STRING                   # value
     |   ID                          # id
+    |   MIN expr expr               # minValue
+    |   NOT expr                    # logicalNot
+    |   AND expr expr               # logicalAnd
+    |   OR expr expr                # logicalOr
     ;
 
 
@@ -42,6 +46,10 @@ printing: PRINT expr NEWLINE # printExpr
     |  PRINT STRING NEWLINE # printString
 
 //reserved words
+OR: 'or'
+AND: 'and'
+NOT: 'not';
+MIN: 'min';
 IF: 'if';
 THEN: 'then';
 ASSIGN: '=' ;
