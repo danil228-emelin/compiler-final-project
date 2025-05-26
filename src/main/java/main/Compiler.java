@@ -6,16 +6,15 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class Compiler {
     public static final List<String> RISC_CODE = new ArrayList<>();
-    private static final Map<String, String> MEMORY_STRING = new HashMap<>();
-    private static final Map<String, Integer> MEMORY_INTEGER = new HashMap<>();
+    public static final Map<String, String> MEMORY_STRING = new HashMap<>();
+    public static final List<String> DATA_SECTION =  List.of(".data\n");
+
+    public static final Map<String, Integer> MEMORY_INTEGER = new HashMap<>();
 
     /**
     private static void printTree(Tree tree, int indent) {
@@ -45,10 +44,10 @@ public class Compiler {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         GrammarMinilangParser parser = new GrammarMinilangParser(tokens);
         ParseTree tree = parser.prog();
-
-        BackendPartInteger eval = new BackendPartInteger();
+        MEMORY_INTEGER.put("a",0);
         BackendPartString evalVisitorString = new BackendPartString();
         evalVisitorString.visit(tree);
-        eval.visit(tree);
+       // eval.visit(tree);
+        RISC_CODE.forEach(System.out::println);
     }
 }

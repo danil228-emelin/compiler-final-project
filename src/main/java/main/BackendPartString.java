@@ -1,108 +1,222 @@
 package main;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.antlr.v4.runtime.Token;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static main.Compiler.*;
 
 public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
-    private static final Map<String, String> memoryString = new HashMap<String, String>();
 
-    public static boolean IsKeyExistInMemoryString(String key){
-        return memoryString.containsKey(key);
+    public static boolean IsKeyExistInMemoryString(String key) {
+        return MEMORY_STRING.containsKey(key);
     }
 
-    public Integer convertStringToInt(String s) {
-        if (s == null || s.trim().isEmpty()) {
-            return 0;
+    private static String current_register = "";
+    private final List<String> USED_REGISTER = new ArrayList<>();
+
+    private String allocateRegister() {
+        for (int i = 0; i < 31; i++) {
+            String reg = "x" + i;
+            if (!USED_REGISTER.contains(reg)) {
+                USED_REGISTER.add(reg);
+                return reg;
+            }
         }
+        throw new RuntimeException("No free registers available");
+    }
 
-        try {
-            return Integer.parseInt(s.trim());
-        } catch (NumberFormatException e) {
-            return 0;
+    private void freeRegister(String reg) {
+        USED_REGISTER.remove(reg);
+    }
+
+    private void throwError(GrammarMinilangParser.StatContext ctx, String message) {
+        Token token = ctx.getStart();
+        String fileName = token.getTokenSource().getSourceName();
+        int lineNumber = token.getLine();
+        int charPosition = token.getCharPositionInLine();
+
+        throw new RuntimeException(String.format(
+                "Assignment error at %s:%d:%d.\n%s",
+                fileName,
+                lineNumber,
+                charPosition,
+                message));
+    }
+
+    private boolean isNum(String num) {
+        if (num == null) return false;
+        return num.matches("-?\\d+");
+    }
+
+
+    @Override
+    public String visitAssign(GrammarMinilangParser.AssignContext ctx) {
+        var assignContext = ctx.getChild(0);
+        String variableName = assignContext.getChild(0).getText();
+        String value = visit(ctx.assignSt().expr());
+        String register = allocateRegister();
+
+        if (MEMORY_STRING.containsKey(variableName)) {
+            RISC_CODE.add("la a0, " + value + "_str\n");
+            RISC_CODE.add("mv a1, " + value + "\n");
+            RISC_CODE.add("jal ra, strcpy"); // Вызываем функцию копирования строк
+            freeRegister(register);
+            return "visitAssign";
+        } else if (MEMORY_INTEGER.containsKey(variableName)) {
+            if (!isNum(value)) {
+                throwError(ctx, String.format("Can't assign int variable %s. value '%s'\n", variableName, value));
+            }
+            RISC_CODE.add("li " + register + " , " + value);
+            current_register = register;
+            return "visitAssign";
+
         }
-
-    }
-
-    @Override
-    public String visitAddSub(LabeledExprParser.AddSubContext ctx) {
-        String possible_var_left = ctx.getChild(0).getText();
-        String possible_var_right = ctx.getChild(2).getText();
-
-        if (memoryString.containsKey(possible_var_left) || memoryString.containsKey(possible_var_right) ) {
-            return memoryString.get(possible_var_left)+memoryString.get(possible_var_right);
-
-        }
-        return "";
-    }
-
-    @Override
-    public String visitPrintExpr(LabeledExprParser.PrintExprContext ctx) {
-        String value = visit(ctx.expr());
-        if (value == null || value.isEmpty() || convertStringToInt(value)==Integer.MAX_VALUE) {return "";}
-        System.out.println("EVS: "+ value);
-        return "";
-    }
-
-    @Override
-    public String visitIfStat(LabeledExprParser.IfStatContext ctx) {
-        return "";
-    }
-
-    @Override
-    public String visitPrintString(LabeledExprParser.PrintStringContext ctx) {
-        String s = ctx.STRING().getText();
-        System.out.printf(s);
-        return s;
+        throwError(ctx, String.format("Variable '%s' not found\n", variableName));
+        return "visitAssign";
     }
 
 
     @Override
-    public String visitAssignString(LabeledExprParser.AssignStringContext ctx) {
-        String id = ctx.ID().getText();
-        String value = ctx.STRING().getText();
-        memoryString.put(id, value.substring(1,value.length()-1));
-        return value;
+    public String visitIfStatement(GrammarMinilangParser.IfStatementContext ctx) {
+        return super.visitIfStatement(ctx);
     }
 
     @Override
-    public String visitMulDiv(LabeledExprParser.MulDivContext ctx) {
-        String possible_var_left = ctx.getChild(0).getText();
-        String possible_var_right = ctx.getChild(2).getText();
-
-        if (memoryString.containsKey(possible_var_left) || memoryString.containsKey(possible_var_right) ) {
-            System.out.println("Strings don't support multiplication and division");
-        }
-        return "";
+    public String visitWhileStatement(GrammarMinilangParser.WhileStatementContext ctx) {
+        return super.visitWhileStatement(ctx);
     }
 
     @Override
-    public String visitRelational(LabeledExprParser.RelationalContext ctx) {
-        String possible_var_left = ctx.getChild(0).getText();
-        String possible_var_right = ctx.getChild(2).getText();
-
-        if (memoryString.containsKey(possible_var_left) || memoryString.containsKey(possible_var_right) ) {
-            System.out.println("EVS: Strings don't support relational operations");
-        }
-        return "";
+    public String visitBlank(GrammarMinilangParser.BlankContext ctx) {
+        return super.visitBlank(ctx);
     }
 
     @Override
-    public String visitId(LabeledExprParser.IdContext ctx) {
-        String id = ctx.ID().getText();
-        if (memoryString.containsKey(id)) return memoryString.get(id);
-
-        return "";
+    public String visitComment(GrammarMinilangParser.CommentContext ctx) {
+        return super.visitComment(ctx);
     }
 
     @Override
-    public String visitEquality(LabeledExprParser.EqualityContext ctx) {
-        String possible_var_left = ctx.getChild(0).getText();
-        String possible_var_right = ctx.getChild(2).getText();
-
-        if (memoryString.containsKey(possible_var_left) || memoryString.containsKey(possible_var_right) ) {
-            return memoryString.get(possible_var_left).equals(memoryString.get(possible_var_right))?"1":"0";
-        }
-        return "";
+    public String visitMultipleComment(GrammarMinilangParser.MultipleCommentContext ctx) {
+        return super.visitMultipleComment(ctx);
     }
+
+    @Override
+    public String visitDeclaration(GrammarMinilangParser.DeclarationContext ctx) {
+        return super.visitDeclaration(ctx);
+    }
+
+    @Override
+    public String visitPrintSmth(GrammarMinilangParser.PrintSmthContext ctx) {
+        return super.visitPrintSmth(ctx);
+    }
+
+    @Override
+    public String visitWhileStat(GrammarMinilangParser.WhileStatContext ctx) {
+        return super.visitWhileStat(ctx);
+    }
+
+    @Override
+    public String visitIfStat(GrammarMinilangParser.IfStatContext ctx) {
+        return super.visitIfStat(ctx);
+    }
+
+    @Override
+    public String visitMultiple_logic_block(GrammarMinilangParser.Multiple_logic_blockContext ctx) {
+        return super.visitMultiple_logic_block(ctx);
+    }
+
+    @Override
+    public String visitSingle_logic_block(GrammarMinilangParser.Single_logic_blockContext ctx) {
+        return super.visitSingle_logic_block(ctx);
+    }
+
+    @Override
+    public String visitAssignSt(GrammarMinilangParser.AssignStContext ctx) {
+        return super.visitAssignSt(ctx);
+    }
+
+    @Override
+    public String visitParens(GrammarMinilangParser.ParensContext ctx) {
+        return super.visitParens(ctx);
+    }
+
+    @Override
+    public String visitMinValue(GrammarMinilangParser.MinValueContext ctx) {
+        return super.visitMinValue(ctx);
+    }
+
+    @Override
+    public String visitLogicalNot(GrammarMinilangParser.LogicalNotContext ctx) {
+        return super.visitLogicalNot(ctx);
+    }
+
+    @Override
+    public String visitLogicalAnd(GrammarMinilangParser.LogicalAndContext ctx) {
+        return super.visitLogicalAnd(ctx);
+    }
+
+    @Override
+    public String visitAddSub(GrammarMinilangParser.AddSubContext ctx) {
+        return super.visitAddSub(ctx);
+    }
+
+    @Override
+    public String visitRelational(GrammarMinilangParser.RelationalContext ctx) {
+        return super.visitRelational(ctx);
+    }
+
+    @Override
+    public String visitId(GrammarMinilangParser.IdContext ctx) {
+        return super.visitId(ctx);
+    }
+
+    @Override
+    public String visitLogicalOr(GrammarMinilangParser.LogicalOrContext ctx) {
+        return super.visitLogicalOr(ctx);
+    }
+
+    @Override
+    public String visitValue(GrammarMinilangParser.ValueContext ctx) {
+        return super.visitValue(ctx);
+    }
+
+    @Override
+    public String visitEquality(GrammarMinilangParser.EqualityContext ctx) {
+        return super.visitEquality(ctx);
+    }
+
+    @Override
+    public String visitMulDiv(GrammarMinilangParser.MulDivContext ctx) {
+        return super.visitMulDiv(ctx);
+    }
+
+    @Override
+    public String visitVariable_decl_id(GrammarMinilangParser.Variable_decl_idContext ctx) {
+        return super.visitVariable_decl_id(ctx);
+    }
+
+    @Override
+    public String visitPrintExpr(GrammarMinilangParser.PrintExprContext ctx) {
+        return super.visitPrintExpr(ctx);
+    }
+
+    @Override
+    public String visitPrintString(GrammarMinilangParser.PrintStringContext ctx) {
+        return super.visitPrintString(ctx);
+    }
+
+    @Override
+    public String visitType_basic(GrammarMinilangParser.Type_basicContext ctx) {
+        return super.visitType_basic(ctx);
+    }
+
+    @Override
+    public String visitLeft_expr(GrammarMinilangParser.Left_exprContext ctx) {
+        return super.visitLeft_expr(ctx);
+    }
+
 }
