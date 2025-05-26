@@ -21,7 +21,7 @@ block: '{' stat* '}'                # multiple_logic_block
         | stat                      # single_logic_block
         ;
 
-assignSt: left_expr ASSIGN expr; # assignSt
+assignSt: left_expr ASSIGN expr;
 
 expr: expr op=(MUL|DIV) expr         # mulDiv
     |   expr op=(ADD|SUB) expr         # addSub
@@ -31,24 +31,22 @@ expr: expr op=(MUL|DIV) expr         # mulDiv
     |   op=INT                      # value
     |   op=STRING                   # value
     |   ID                          # id
-    |   MIN expr expr               # minValue
-    |   NOT expr                    # logicalNot
-    |   AND expr expr               # logicalAnd
-    |   OR expr expr                # logicalOr
+    |   op=MIN expr expr               # minValue
+    |   op=NOT expr                    # logicalNot
+    |   expr op=AND expr               # logicalAnd
+    |   expr op=OR expr                # logicalOr
     ;
 
 
 variable_decl
-        : VAR ID (',' ID )* ':' type_basic # variable_decl
+        : VAR ID (',' ID )* ':' type_basic # variable_decl_id
         ;
 
 printing: PRINT expr NEWLINE # printExpr
     |  PRINT STRING NEWLINE # printString
+    ;
 
 //reserved words
-OR: 'or'
-AND: 'and'
-NOT: 'not';
 MIN: 'min';
 IF: 'if';
 THEN: 'then';

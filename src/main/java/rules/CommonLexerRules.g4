@@ -6,7 +6,7 @@ COMMENT : '/*' .*? '*/' -> skip ; // Match "/*" stuff "*/"
 
 ID : ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')* ;
 
-INT : -?[0-9]+ ; // match integers
+INT : '-'?[0-9]+ ; // match integers
 
 NEWLINE:'\r'? '\n' ;   // return newlines to parser (end-statement signal)
 
@@ -27,3 +27,4 @@ type_basic
 
 left_expr
         : ID
+        ;
