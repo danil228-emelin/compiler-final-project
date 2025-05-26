@@ -12,3 +12,15 @@ stat:   expr NEWLINE                # printExpr
     | STRING NEWLINE                # printString
     | ID '=' STRING NEWLINE         # assignString
     ;
+
+
+assignSt: left_expr ASSIGN expr; # assignSt
+
+variable_decl
+        : VAR ID (',' ID )* ':' type_basic # variable_decl
+        ;
+
+
+//reserved words
+ASSIGN    : '=' ;
+VAR       : 'var';
