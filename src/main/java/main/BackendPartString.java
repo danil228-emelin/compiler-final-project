@@ -57,7 +57,7 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
         var assignContext = ctx.getChild(0);
         String variableName = assignContext.getChild(0).getText();
         String value = visit(ctx.assignSt().expr());
-        String register = allocateRegister();
+        String register = "x1";
 
         if (MEMORY_STRING.containsKey(variableName)) {
             RISC_CODE.add("la a0, " + value + "_str\n");
@@ -69,7 +69,8 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
             if (!isNum(value)) {
                 throwError(ctx, String.format("Can't assign int variable %s. value '%s'\n", variableName, value));
             }
-            RISC_CODE.add("li " + register + " , " + value);
+            register = VARIABLE_REGISTER__MAP.get(variableName);
+            RISC_CODE.add("li " + register + ", " + value);
             current_register = register;
             return "visitAssign";
 
@@ -117,7 +118,7 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
         } else if (type.equals("int")){
             MEMORY_INTEGER.put(newVariable, 0);
             String reg = allocateRegister();
-            REGISTER_VARIABLE_MAP.put(reg,newVariable);
+            VARIABLE_REGISTER__MAP.put(newVariable,reg);
             RISC_CODE.add("li " + reg + ", 0" );
         }
         else {
