@@ -4,9 +4,30 @@ LINE_COMMENT : ':>' .*? '\r'? '\n' -> skip ;
 
 COMMENT : '/*' .*? '*/' -> skip ; // Match "/*" stuff "*/"
 
-ID : ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')* ;
+VAR: 'var';
 
-INT : '-'?[0-9]+ ; // match integers
+MIN: 'min';
+IF: 'if';
+THEN: 'then';
+ASSIGN: '=' ;
+PRINT: 'print';
+MUL : '*' ;
+DIV : '/' ;
+ADD : '+' ;
+SUB : '-' ;
+NOT : '!' ;
+AND : '&&' ;
+OR  : '||' ;
+GT  : '>' ;
+LT  : '<' ;
+GE  : '>=' ;
+LE  : '<=' ;
+EQ  : '==' ;
+NE  : '!=' ;
+INT_TYPE : 'int';
+
+STRING_TYPE : 'string';
+
 
 NEWLINE:'\r'? '\n' ;   // return newlines to parser (end-statement signal)
 
@@ -16,9 +37,9 @@ STRING: '"' (ESC|.)*? '"' ;
 
 ESC : '\\"' | '\\\\' ; // 2-char sequences \" and \\
 
-INT_TYPE : 'int';
+ID : ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')* ;
 
-STRING_TYPE : 'string';
+INT : '-'?[0-9]+ ; // match integers
 
 type_basic
         : INT_TYPE

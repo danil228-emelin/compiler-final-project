@@ -46,23 +46,3 @@ printing: PRINT expr NEWLINE # printExpr
     |  PRINT STRING NEWLINE # printString
     ;
 
-//reserved words
-MIN: 'min';
-IF: 'if';
-THEN: 'then';
-ASSIGN: '=' ;
-VAR: 'var';
-PRINT: 'print';
-MUL : '*' ;
-DIV : '/' ;
-ADD : '+' ;
-SUB : '-' ;
-NOT : '!' ;
-AND : '&&' ;
-OR  : '||' ;
-GT  : '>' ;
-LT  : '<' ;
-GE  : '>=' ;
-LE  : '<=' ;
-EQ  : '==' ;
-NE  : '!=' ;

@@ -18,7 +18,7 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
     private final List<String> USED_REGISTER = new ArrayList<>();
 
     private String allocateRegister() {
-        for (int i = 0; i < 31; i++) {
+        for (int i = 1; i <= 31; i++) {
             String reg = "x" + i;
             if (!USED_REGISTER.contains(reg)) {
                 USED_REGISTER.add(reg);
@@ -106,7 +106,24 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
     @Override
     public String visitDeclaration(GrammarMinilangParser.DeclarationContext ctx) {
-        return super.visitDeclaration(ctx);
+        var assignContext = ctx.variable_decl();
+        String newVariable = assignContext.getChild(1).getText();
+        String type = assignContext.getChild(3).getText();
+        if (MEMORY_STRING.containsKey(newVariable) || MEMORY_INTEGER.containsKey(newVariable)) {
+            throwError(ctx, String.format("Variable %s already defined\n", newVariable));
+        }
+        if (type.equals("string")) {
+            MEMORY_STRING.put(newVariable, "");
+        } else if (type.equals("int")){
+            MEMORY_INTEGER.put(newVariable, 0);
+            String reg = allocateRegister();
+            REGISTER_VARIABLE_MAP.put(reg,newVariable);
+            RISC_CODE.add("li " + reg + ", 0" );
+        }
+        else {
+            throwError(ctx, String.format("Unsupported %s type\n", type));
+        }
+        return "visitDeclaration";
     }
 
     @Override

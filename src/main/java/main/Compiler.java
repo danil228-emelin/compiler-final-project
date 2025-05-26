@@ -13,6 +13,8 @@ public class Compiler {
     public static final List<String> RISC_CODE = new ArrayList<>();
     public static final Map<String, String> MEMORY_STRING = new HashMap<>();
     public static final List<String> DATA_SECTION =  List.of(".data\n");
+    public static final Map<String, String> REGISTER_VARIABLE_MAP = new HashMap<>();
+
 
     public static final Map<String, Integer> MEMORY_INTEGER = new HashMap<>();
 
@@ -44,7 +46,6 @@ public class Compiler {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         GrammarMinilangParser parser = new GrammarMinilangParser(tokens);
         ParseTree tree = parser.prog();
-        MEMORY_INTEGER.put("a",0);
         BackendPartString evalVisitorString = new BackendPartString();
         evalVisitorString.visit(tree);
        // eval.visit(tree);
