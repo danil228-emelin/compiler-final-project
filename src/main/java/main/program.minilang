@@ -1,7 +1,8 @@
 :> program on minilang language
 var a : int
 var b : int
+var c : int
 a = b
 a = -3
 b = 4/2
-c = 6 < 6
+c = 2 != 3

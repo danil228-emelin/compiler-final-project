@@ -188,12 +188,51 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
     @Override
     public String visitLogicalNot(GrammarMinilangParser.LogicalNotContext ctx) {
-        return super.visitLogicalNot(ctx);
+        String exprValue = visit(ctx.expr());
+
+        if (!isNum(exprValue)) {
+            throw new RuntimeException(String.format(
+                    "Logical NOT requires numeric argument, got: %s", exprValue));
+        }
+
+        RISC_CODE.add("# logical NOT operation");
+        RISC_CODE.add("# load value into x2");
+        RISC_CODE.add(String.format("li x2, %s", exprValue));
+
+        RISC_CODE.add("#  x1 = (x2 == 0) ? 1 : 0");
+
+        RISC_CODE.add("seqz x1, x2");
+
+        boolean result = Integer.parseInt(exprValue) == 0;
+        return String.valueOf(result ? 1 : 0);
     }
 
     @Override
     public String visitLogicalAnd(GrammarMinilangParser.LogicalAndContext ctx) {
-        return super.visitLogicalAnd(ctx);
+        String leftValue = visit(ctx.expr(0));
+        String rightValue = visit(ctx.expr(1));
+
+        // Проверка типов
+        if (!isNum(leftValue) || !isNum(rightValue)) {
+            throw new RuntimeException(String.format(
+                    "Logical AND requires numeric arguments, got: %s and %s",
+                    leftValue, rightValue));
+        }
+
+        RISC_CODE.add("# logical AND operation");
+
+        RISC_CODE.add("# load left value into x2");
+        RISC_CODE.add(String.format("li x2, %s", leftValue));
+        RISC_CODE.add("# load right value into x3");
+        RISC_CODE.add(String.format("li x3, %s", rightValue));
+        RISC_CODE.add("# x1 = (x2 != 0 && x3 != 0) ? 1 : 0");
+        RISC_CODE.add("snez x2, x2");
+        RISC_CODE.add("snez x3, x3");
+        RISC_CODE.add("and x1, x2, x3");
+
+        boolean result = Integer.parseInt(leftValue) != 0 &&
+                Integer.parseInt(rightValue) != 0;
+        return String.valueOf(result ? 1 : 0);
     }
 
     @Override
@@ -301,11 +340,20 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
         int num2 = Integer.parseInt(value2);
         boolean result;
         switch (opText) {
-            case "<": result = num1 < num2; break;
-            case ">": result = num1 > num2; break;
-            case "<=": result = num1 <= num2; break;
-            case ">=": result = num1 >= num2; break;
-            default: throw new AssertionError();
+            case "<":
+                result = num1 < num2;
+                break;
+            case ">":
+                result = num1 > num2;
+                break;
+            case "<=":
+                result = num1 <= num2;
+                break;
+            case ">=":
+                result = num1 >= num2;
+                break;
+            default:
+                throw new AssertionError();
         }
 
         return String.valueOf(result ? 1 : 0);  // RISC-V uses 1/0 for true/false
@@ -342,7 +390,37 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
     @Override
     public String visitEquality(GrammarMinilangParser.EqualityContext ctx) {
-        return super.visitEquality(ctx);
+        var exp1 = ctx.expr(0);
+        var exp2 = ctx.expr(1);
+        var operator = ctx.op;
+
+        String value1 = visit(exp1);
+        String value2 = visit(exp2);
+
+        RISC_CODE.add("# equality operation " + operator.getText());
+
+        // Загрузка значений в регистры
+        RISC_CODE.add("# load first value into x2");
+        RISC_CODE.add(String.format("li x2, %s", value1));
+        RISC_CODE.add("# load second value into x3");
+        RISC_CODE.add(String.format("li x3, %s", value2));
+
+        if (operator.getText().equals("==")) {
+            RISC_CODE.add("# x1 = (x2 == x3) ? 1 : 0");
+            RISC_CODE.add("xor x1, x2, x3");
+            RISC_CODE.add("seqz x1, x1");
+        } else {
+            RISC_CODE.add("# x1 = (x2 != x3) ? 1 : 0");
+            RISC_CODE.add("xor x1, x2, x3");
+            RISC_CODE.add("snez x1, x1");
+        }
+
+        // Вычисление результата для семантического анализа
+        boolean result = operator.getText().equals("==")
+                ? value1.equals(value2)
+                : !value1.equals(value2);
+
+        return String.valueOf(result ? 1 : 0); // Возвращаем 1/0 как в RISC-V
     }
 
     @Override
@@ -401,7 +479,8 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
     @Override
     public String visitPrintString(GrammarMinilangParser.PrintStringContext ctx) {
-        return super.visitPrintString(ctx);
+        throw new RuntimeException("Currently not supported");
+        //return super.visitPrintString(ctx);
     }
 
     @Override
