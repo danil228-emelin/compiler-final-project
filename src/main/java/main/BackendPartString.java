@@ -490,8 +490,8 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
         RISC_CODE.add("li a7, 1");
         RISC_CODE.add("ecall");
         RISC_CODE.add("# print newline");
-        RISC_CODE.add("li a0, 10");  // ASCII код '\n'
-        RISC_CODE.add("li a7, 11");   // syscall code for print_char
+        RISC_CODE.add("li a0, 10");
+        RISC_CODE.add("li a7, 11");
         RISC_CODE.add("ecall");
         return exprValue;
     }

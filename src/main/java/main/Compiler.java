@@ -66,9 +66,17 @@ public class Compiler {
 
         ParseTree tree = parser.prog();
         DATA_SECTION.add(".data");
+
+        RISC_CODE.add(".global main");
+        RISC_CODE.add(".text");
+        RISC_CODE.add("main:");
+
         try {
             BackendPartString evalVisitorString = new BackendPartString();
             evalVisitorString.visit(tree);
+            RISC_CODE.add("# exit");
+            RISC_CODE.add("li a7, 93");
+            RISC_CODE.add("ecall");
             DATA_SECTION.forEach(System.out::println);
             RISC_CODE.forEach(System.out::println);
         } catch (Exception e) {
