@@ -1,4 +1,5 @@
+:> program on minilang language
 var a : int
-a = -12
-
-
+var b :int
+a = b
+a = "abc"

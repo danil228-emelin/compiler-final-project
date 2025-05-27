@@ -69,7 +69,9 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
             if (!isNum(value)) {
                 throwError(ctx, String.format("Can't assign int variable %s. value '%s'\n", variableName, value));
             }
+            MEMORY_INTEGER.put(variableName, Integer.valueOf(value));
             register = VARIABLE_REGISTER__MAP.get(variableName);
+            RISC_CODE.add(String.format("# save value %s of variable %s into %s register", value, variableName, register));
             RISC_CODE.add("li " + register + ", " + value);
             current_register = register;
             return "visitAssign";
@@ -90,20 +92,6 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
         return super.visitWhileStatement(ctx);
     }
 
-    @Override
-    public String visitBlank(GrammarMinilangParser.BlankContext ctx) {
-        return super.visitBlank(ctx);
-    }
-
-    @Override
-    public String visitComment(GrammarMinilangParser.CommentContext ctx) {
-        return super.visitComment(ctx);
-    }
-
-    @Override
-    public String visitMultipleComment(GrammarMinilangParser.MultipleCommentContext ctx) {
-        return super.visitMultipleComment(ctx);
-    }
 
     @Override
     public String visitDeclaration(GrammarMinilangParser.DeclarationContext ctx) {
@@ -115,13 +103,13 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
         }
         if (type.equals("string")) {
             MEMORY_STRING.put(newVariable, "");
-        } else if (type.equals("int")){
+        } else if (type.equals("int")) {
             MEMORY_INTEGER.put(newVariable, 0);
             String reg = allocateRegister();
-            VARIABLE_REGISTER__MAP.put(newVariable,reg);
-            RISC_CODE.add("li " + reg + ", 0" );
-        }
-        else {
+            VARIABLE_REGISTER__MAP.put(newVariable, reg);
+            RISC_CODE.add(String.format("# declare %s into %s register", newVariable, reg));
+            RISC_CODE.add("li " + reg + ", 0");
+        } else {
             throwError(ctx, String.format("Unsupported %s type\n", type));
         }
         return "visitDeclaration";
@@ -152,15 +140,6 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
         return super.visitSingle_logic_block(ctx);
     }
 
-    @Override
-    public String visitAssignSt(GrammarMinilangParser.AssignStContext ctx) {
-        return super.visitAssignSt(ctx);
-    }
-
-    @Override
-    public String visitParens(GrammarMinilangParser.ParensContext ctx) {
-        return super.visitParens(ctx);
-    }
 
     @Override
     public String visitMinValue(GrammarMinilangParser.MinValueContext ctx) {
@@ -189,7 +168,17 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
     @Override
     public String visitId(GrammarMinilangParser.IdContext ctx) {
-        return super.visitId(ctx);
+        var id = ctx.getChild(0).getText();
+        if (MEMORY_STRING.containsKey(id)) {
+            return MEMORY_STRING.get(id);
+        }
+        if (MEMORY_INTEGER.containsKey(id)) {
+            Integer value = MEMORY_INTEGER.get(id);
+            String register = VARIABLE_REGISTER__MAP.get(id);
+            RISC_CODE.add(String.format("# take value %d from register %s(store %s)", value, register, id));
+            return String.valueOf(value);
+        }
+        throw new RuntimeException(String.format("variable doesn't exist %s\n", id));
     }
 
     @Override
@@ -199,7 +188,11 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
     @Override
     public String visitValue(GrammarMinilangParser.ValueContext ctx) {
-        return super.visitValue(ctx);
+        var string_rep = ctx.op.getText();
+        if (isNum(string_rep)) {
+            return string_rep;
+        }
+        throw new RuntimeException("visitValue: Can't assing strings yet");
     }
 
     @Override
