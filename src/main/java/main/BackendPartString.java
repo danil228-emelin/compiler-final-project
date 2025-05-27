@@ -154,8 +154,8 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
         if (!operator.getText().equals("min")) {
             throw new RuntimeException("visitMinValue: Wrong operator name. Must be min");
         }
-        var value1 = visit(exp1);
-        var value2 = visit(exp2);
+        String value1 = visit(exp1);
+        String value2 = visit(exp2);
         if (!isNum(value1)) {
             throw new RuntimeException(String.format("visitMinValue. Can't execute. First argument isn't number %s", value1));
         }
@@ -173,17 +173,17 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
         RISC_CODE.add("# x4 = (x1 == 1) ? -1 : 0 (маска)");
         RISC_CODE.add("li x4, 0");
         RISC_CODE.add("sub x4, x0, x1");
-        RISC_CODE.add(String.format("# if x4 == 1 then first argument(x2) is min. %s ",value1));
+        RISC_CODE.add(String.format("# if x4 == 1 then first argument(x2) is min. %s ", value1));
         RISC_CODE.add("and x2, x2, x4");
         RISC_CODE.add("# invert mask ");
         RISC_CODE.add("not x4,x4");
-        RISC_CODE.add(String.format("# if x4 == 0 then second argument(x3) is min. %s ",value2));
+        RISC_CODE.add(String.format("# if x4 == 0 then second argument(x3) is min. %s ", value2));
         RISC_CODE.add("and x3, x3, x4");
         RISC_CODE.add("# put result into x1");
         RISC_CODE.add("li x1, 0");
         RISC_CODE.add("or x1, x2, x3");
 
-        return "0";
+        return String.valueOf(Math.min(Integer.parseInt(value1), Integer.parseInt(value2)));
     }
 
     @Override
@@ -198,7 +198,49 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
     @Override
     public String visitAddSub(GrammarMinilangParser.AddSubContext ctx) {
-        return super.visitAddSub(ctx);
+        var exp1 = ctx.expr(0);
+        var exp2 = ctx.expr(1);
+        var operator = ctx.op;
+
+        if (!operator.getText().equals("+") && !operator.getText().equals("-")) {
+            throw new RuntimeException("visitAddSub: Wrong operator. Must be + or -");
+        }
+
+        String value1 = visit(exp1);
+        String value2 = visit(exp2);
+
+        if (!isNum(value1)) {
+            throw new RuntimeException(String.format(
+                    "visitAddSub: First argument isn't a number: %s", value1));
+        }
+        if (!isNum(value2)) {
+            throw new RuntimeException(String.format(
+                    "visitAddSub: Second argument isn't a number: %s", value2));
+        }
+
+        RISC_CODE.add("# start " + operator.getText() + " operation");
+
+        RISC_CODE.add("# load first value into x2");
+        RISC_CODE.add(String.format("li x2, %s", value1));
+
+        RISC_CODE.add("# load second value into x3");
+        RISC_CODE.add(String.format("li x3, %s", value2));
+
+        if (operator.getText().equals("+")) {
+            RISC_CODE.add("# x1 = x2 + x3");
+            RISC_CODE.add("add x1, x2, x3");
+        } else {
+            RISC_CODE.add("# x1 = x2 - x3");
+            RISC_CODE.add("sub x1, x2, x3");
+        }
+
+        // Возвращаем результат вычислений
+        int result = operator.getText().equals("+")
+                ? Integer.parseInt(value1) + Integer.parseInt(value2)
+                : Integer.parseInt(value1) - Integer.parseInt(value2);
+
+        return String.valueOf(result);
+
     }
 
     @Override

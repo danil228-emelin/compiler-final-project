@@ -3,5 +3,5 @@ var a : int
 var b : int
 a = b
 a = -3
-min 2 3
+b = 2 + 3
 
