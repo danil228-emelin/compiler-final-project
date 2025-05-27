@@ -245,7 +245,70 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
     @Override
     public String visitRelational(GrammarMinilangParser.RelationalContext ctx) {
-        return super.visitRelational(ctx);
+        var exp1 = ctx.expr(0);
+        var exp2 = ctx.expr(1);
+        var operator = ctx.op;
+
+        String opText = operator.getText();
+        if (!Set.of("<", ">", "<=", ">=").contains(opText)) {
+            throw new RuntimeException("visitRelational: Invalid operator. Must be <, >, <=, or >=");
+        }
+
+        String value1 = visit(exp1);
+        String value2 = visit(exp2);
+
+        if (!isNum(value1)) {
+            throw new RuntimeException(String.format(
+                    "visitRelational: First argument isn't a number: %s", value1));
+        }
+        if (!isNum(value2)) {
+            throw new RuntimeException(String.format(
+                    "visitRelational: Second argument isn't a number: %s", value2));
+        }
+
+        RISC_CODE.add("# start relational operation " + opText);
+
+        RISC_CODE.add("# load first value into x2");
+        RISC_CODE.add(String.format("li x2, %s", value1));
+
+        RISC_CODE.add("# load second value into x3");
+        RISC_CODE.add(String.format("li x3, %s", value2));
+
+
+        switch (opText) {
+            case "<":
+                RISC_CODE.add("# x1 = (x2 < x3) ? 1 : 0");
+                RISC_CODE.add("slt x1, x2, x3");
+                break;
+            case ">":
+                RISC_CODE.add("# x1 = (x2 > x3) ? 1 : 0");
+                RISC_CODE.add("slt x1, x3, x2");
+                break;
+            case "<=":
+                RISC_CODE.add("# x1 = (x2 <= x3) ? 1 : 0");
+                RISC_CODE.add("slt x1, x3, x2");
+                RISC_CODE.add("xori x1, x1, 1");
+                break;
+            case ">=":
+                RISC_CODE.add("# x1 = (x2 >= x3) ? 1 : 0");
+                RISC_CODE.add("slt x1, x2, x3");
+                RISC_CODE.add("xori x1, x1, 1");
+                break;
+        }
+
+        // Calculate boolean result for return
+        int num1 = Integer.parseInt(value1);
+        int num2 = Integer.parseInt(value2);
+        boolean result;
+        switch (opText) {
+            case "<": result = num1 < num2; break;
+            case ">": result = num1 > num2; break;
+            case "<=": result = num1 <= num2; break;
+            case ">=": result = num1 >= num2; break;
+            default: throw new AssertionError();
+        }
+
+        return String.valueOf(result ? 1 : 0);  // RISC-V uses 1/0 for true/false
     }
 
     @Override
