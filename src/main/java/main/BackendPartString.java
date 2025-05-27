@@ -284,7 +284,50 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
     @Override
     public String visitMulDiv(GrammarMinilangParser.MulDivContext ctx) {
-        return super.visitMulDiv(ctx);
+        var exp1 = ctx.expr(0);
+        var exp2 = ctx.expr(1);
+        var operator = ctx.op;
+
+        if (!operator.getText().equals("*") && !operator.getText().equals("/")) {
+            throw new RuntimeException("visitMulDiv: Wrong operator. Must be * or /");
+        }
+
+        String value1 = visit(exp1);
+        String value2 = visit(exp2);
+
+        if (!isNum(value1)) {
+            throw new RuntimeException(String.format(
+                    "visitMulDiv: First argument isn't a number: %s", value1));
+        }
+        if (!isNum(value2)) {
+            throw new RuntimeException(String.format(
+                    "visitMulDiv: Second argument isn't a number: %s", value2));
+        }
+
+        RISC_CODE.add("# start " + operator.getText() + " operation");
+
+        RISC_CODE.add("# load first value into x2");
+        RISC_CODE.add(String.format("li x2, %s", value1));
+
+        RISC_CODE.add("# load second value into x3");
+        RISC_CODE.add(String.format("li x3, %s", value2));
+
+        if (operator.getText().equals("*")) {
+            RISC_CODE.add("# x1 = x2 * x3");
+            RISC_CODE.add("mul x1, x2, x3");
+        } else {
+            if (value2.equals("0")) {
+                throw new RuntimeException("Error. Division by zero");
+            }
+            RISC_CODE.add("# x1 = x2 / x3");
+            RISC_CODE.add("div x1, x2, x3");
+        }
+
+        int result = operator.getText().equals("*")
+                ? Integer.parseInt(value1) * Integer.parseInt(value2)
+                : Integer.parseInt(value1) / Integer.parseInt(value2);
+
+        return String.valueOf(result);
     }
 
 

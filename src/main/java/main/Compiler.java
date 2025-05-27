@@ -14,9 +14,8 @@ import java.util.Map;
 public class Compiler {
     public static final List<String> RISC_CODE = new ArrayList<>();
     public static final Map<String, String> MEMORY_STRING = new HashMap<>();
-    public static final List<String> DATA_SECTION = List.of(".data\n");
+    public static final List<String> DATA_SECTION = new ArrayList<>();
     public static final Map<String, String> VARIABLE_REGISTER__MAP = new HashMap<>();
-
 
     public static final Map<String, String> MEMORY_INTEGER = new HashMap<>();
 
@@ -66,10 +65,11 @@ public class Compiler {
         });
 
         ParseTree tree = parser.prog();
-
+        DATA_SECTION.add(".data");
         try {
             BackendPartString evalVisitorString = new BackendPartString();
             evalVisitorString.visit(tree);
+            DATA_SECTION.forEach(System.out::println);
             RISC_CODE.forEach(System.out::println);
         } catch (Exception e) {
             System.err.println("error in " +
