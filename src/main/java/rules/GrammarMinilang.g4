@@ -11,6 +11,7 @@ stat:   assignSt NEWLINE            # assign
     | COMMENT                       # multipleComment
     | variable_decl NEWLINE         # declaration
     | printing NEWLINE              # printSmth
+    | expr NEWLINE                  #expr_action
     ;
 
 whileStat:  'while' expr block ;

@@ -142,7 +142,7 @@ public class GrammarMinilangParser extends Parser {
 				setState(25); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 73014521346L) != 0) );
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 227635445282L) != 0) );
 			}
 		}
 		catch (RecognitionException re) {
@@ -239,6 +239,19 @@ public class GrammarMinilangParser extends Parser {
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
+	public static class Expr_actionContext extends StatContext {
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public TerminalNode NEWLINE() { return getToken(GrammarMinilangParser.NEWLINE, 0); }
+		public Expr_actionContext(StatContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GrammarMinilangVisitor ) return ((GrammarMinilangVisitor<? extends T>)visitor).visitExpr_action(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
 	public static class MultipleCommentContext extends StatContext {
 		public TerminalNode COMMENT() { return getToken(GrammarMinilangParser.COMMENT, 0); }
 		public MultipleCommentContext(StatContext ctx) { copyFrom(ctx); }
@@ -266,10 +279,10 @@ public class GrammarMinilangParser extends Parser {
 		StatContext _localctx = new StatContext(_ctx, getState());
 		enterRule(_localctx, 2, RULE_stat);
 		try {
-			setState(41);
+			setState(44);
 			_errHandler.sync(this);
-			switch (_input.LA(1)) {
-			case ID:
+			switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
+			case 1:
 				_localctx = new AssignContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
@@ -279,7 +292,7 @@ public class GrammarMinilangParser extends Parser {
 				match(NEWLINE);
 				}
 				break;
-			case IF:
+			case 2:
 				_localctx = new IfStatementContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
@@ -287,7 +300,7 @@ public class GrammarMinilangParser extends Parser {
 				ifStat();
 				}
 				break;
-			case T__0:
+			case 3:
 				_localctx = new WhileStatementContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
@@ -295,7 +308,7 @@ public class GrammarMinilangParser extends Parser {
 				whileStat();
 				}
 				break;
-			case NEWLINE:
+			case 4:
 				_localctx = new BlankContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
@@ -303,7 +316,7 @@ public class GrammarMinilangParser extends Parser {
 				match(NEWLINE);
 				}
 				break;
-			case LINE_COMMENT:
+			case 5:
 				_localctx = new CommentContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
@@ -311,7 +324,7 @@ public class GrammarMinilangParser extends Parser {
 				match(LINE_COMMENT);
 				}
 				break;
-			case COMMENT:
+			case 6:
 				_localctx = new MultipleCommentContext(_localctx);
 				enterOuterAlt(_localctx, 6);
 				{
@@ -319,7 +332,7 @@ public class GrammarMinilangParser extends Parser {
 				match(COMMENT);
 				}
 				break;
-			case VAR:
+			case 7:
 				_localctx = new DeclarationContext(_localctx);
 				enterOuterAlt(_localctx, 7);
 				{
@@ -329,7 +342,7 @@ public class GrammarMinilangParser extends Parser {
 				match(NEWLINE);
 				}
 				break;
-			case PRINT:
+			case 8:
 				_localctx = new PrintSmthContext(_localctx);
 				enterOuterAlt(_localctx, 8);
 				{
@@ -339,8 +352,16 @@ public class GrammarMinilangParser extends Parser {
 				match(NEWLINE);
 				}
 				break;
-			default:
-				throw new NoViableAltException(this);
+			case 9:
+				_localctx = new Expr_actionContext(_localctx);
+				enterOuterAlt(_localctx, 9);
+				{
+				setState(41);
+				expr(0);
+				setState(42);
+				match(NEWLINE);
+				}
+				break;
 			}
 		}
 		catch (RecognitionException re) {
@@ -379,11 +400,11 @@ public class GrammarMinilangParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(43);
+			setState(46);
 			match(T__0);
-			setState(44);
+			setState(47);
 			expr(0);
-			setState(45);
+			setState(48);
 			block();
 			}
 		}
@@ -428,22 +449,22 @@ public class GrammarMinilangParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(47);
-			match(IF);
-			setState(48);
-			expr(0);
-			setState(49);
-			match(THEN);
 			setState(50);
-			block();
+			match(IF);
+			setState(51);
+			expr(0);
+			setState(52);
+			match(THEN);
 			setState(53);
+			block();
+			setState(56);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,2,_ctx) ) {
 			case 1:
 				{
-				setState(51);
+				setState(54);
 				match(T__1);
-				setState(52);
+				setState(55);
 				block();
 				}
 				break;
@@ -506,45 +527,50 @@ public class GrammarMinilangParser extends Parser {
 		enterRule(_localctx, 8, RULE_block);
 		int _la;
 		try {
-			setState(64);
+			setState(67);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__2:
 				_localctx = new Multiple_logic_blockContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(55);
+				setState(58);
 				match(T__2);
-				setState(59);
+				setState(62);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 73014521346L) != 0)) {
+				while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 227635445282L) != 0)) {
 					{
 					{
-					setState(56);
+					setState(59);
 					stat();
 					}
 					}
-					setState(61);
+					setState(64);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
-				setState(62);
+				setState(65);
 				match(T__3);
 				}
 				break;
 			case T__0:
+			case T__4:
 			case LINE_COMMENT:
 			case COMMENT:
 			case VAR:
+			case MIN:
 			case IF:
 			case PRINT:
+			case NOT:
 			case NEWLINE:
+			case STRING:
 			case ID:
+			case INT:
 				_localctx = new Single_logic_blockContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(63);
+				setState(66);
 				stat();
 				}
 				break;
@@ -589,11 +615,11 @@ public class GrammarMinilangParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(66);
+			setState(69);
 			left_expr();
-			setState(67);
+			setState(70);
 			match(ASSIGN);
-			setState(68);
+			setState(71);
 			expr(0);
 			}
 		}
@@ -810,7 +836,7 @@ public class GrammarMinilangParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(84);
+			setState(87);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__4:
@@ -819,11 +845,11 @@ public class GrammarMinilangParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(71);
+				setState(74);
 				match(T__4);
-				setState(72);
+				setState(75);
 				expr(0);
-				setState(73);
+				setState(76);
 				match(T__5);
 				}
 				break;
@@ -832,7 +858,7 @@ public class GrammarMinilangParser extends Parser {
 				_localctx = new ValueContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(75);
+				setState(78);
 				((ValueContext)_localctx).op = match(INT);
 				}
 				break;
@@ -841,7 +867,7 @@ public class GrammarMinilangParser extends Parser {
 				_localctx = new ValueContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(76);
+				setState(79);
 				((ValueContext)_localctx).op = match(STRING);
 				}
 				break;
@@ -850,7 +876,7 @@ public class GrammarMinilangParser extends Parser {
 				_localctx = new IdContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(77);
+				setState(80);
 				match(ID);
 				}
 				break;
@@ -859,11 +885,11 @@ public class GrammarMinilangParser extends Parser {
 				_localctx = new MinValueContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(78);
+				setState(81);
 				((MinValueContext)_localctx).op = match(MIN);
-				setState(79);
+				setState(82);
 				expr(0);
-				setState(80);
+				setState(83);
 				expr(4);
 				}
 				break;
@@ -872,9 +898,9 @@ public class GrammarMinilangParser extends Parser {
 				_localctx = new LogicalNotContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(82);
+				setState(85);
 				((LogicalNotContext)_localctx).op = match(NOT);
-				setState(83);
+				setState(86);
 				expr(3);
 				}
 				break;
@@ -882,7 +908,7 @@ public class GrammarMinilangParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(106);
+			setState(109);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -890,16 +916,16 @@ public class GrammarMinilangParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(104);
+					setState(107);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
 					case 1:
 						{
 						_localctx = new MulDivContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(86);
+						setState(89);
 						if (!(precpred(_ctx, 12))) throw new FailedPredicateException(this, "precpred(_ctx, 12)");
-						setState(87);
+						setState(90);
 						((MulDivContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==MUL || _la==DIV) ) {
@@ -910,7 +936,7 @@ public class GrammarMinilangParser extends Parser {
 							_errHandler.reportMatch(this);
 							consume();
 						}
-						setState(88);
+						setState(91);
 						expr(13);
 						}
 						break;
@@ -918,9 +944,9 @@ public class GrammarMinilangParser extends Parser {
 						{
 						_localctx = new AddSubContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(89);
+						setState(92);
 						if (!(precpred(_ctx, 11))) throw new FailedPredicateException(this, "precpred(_ctx, 11)");
-						setState(90);
+						setState(93);
 						((AddSubContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==ADD || _la==SUB) ) {
@@ -931,7 +957,7 @@ public class GrammarMinilangParser extends Parser {
 							_errHandler.reportMatch(this);
 							consume();
 						}
-						setState(91);
+						setState(94);
 						expr(12);
 						}
 						break;
@@ -939,9 +965,9 @@ public class GrammarMinilangParser extends Parser {
 						{
 						_localctx = new RelationalContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(92);
+						setState(95);
 						if (!(precpred(_ctx, 10))) throw new FailedPredicateException(this, "precpred(_ctx, 10)");
-						setState(93);
+						setState(96);
 						((RelationalContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 251658240L) != 0)) ) {
@@ -952,7 +978,7 @@ public class GrammarMinilangParser extends Parser {
 							_errHandler.reportMatch(this);
 							consume();
 						}
-						setState(94);
+						setState(97);
 						expr(11);
 						}
 						break;
@@ -960,9 +986,9 @@ public class GrammarMinilangParser extends Parser {
 						{
 						_localctx = new EqualityContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(95);
+						setState(98);
 						if (!(precpred(_ctx, 9))) throw new FailedPredicateException(this, "precpred(_ctx, 9)");
-						setState(96);
+						setState(99);
 						((EqualityContext)_localctx).op = _input.LT(1);
 						_la = _input.LA(1);
 						if ( !(_la==EQ || _la==NE) ) {
@@ -973,7 +999,7 @@ public class GrammarMinilangParser extends Parser {
 							_errHandler.reportMatch(this);
 							consume();
 						}
-						setState(97);
+						setState(100);
 						expr(10);
 						}
 						break;
@@ -981,11 +1007,11 @@ public class GrammarMinilangParser extends Parser {
 						{
 						_localctx = new LogicalAndContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(98);
+						setState(101);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(99);
+						setState(102);
 						((LogicalAndContext)_localctx).op = match(AND);
-						setState(100);
+						setState(103);
 						expr(3);
 						}
 						break;
@@ -993,18 +1019,18 @@ public class GrammarMinilangParser extends Parser {
 						{
 						_localctx = new LogicalOrContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(101);
+						setState(104);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(102);
+						setState(105);
 						((LogicalOrContext)_localctx).op = match(OR);
-						setState(103);
+						setState(106);
 						expr(2);
 						}
 						break;
 					}
 					} 
 				}
-				setState(108);
+				setState(111);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,7,_ctx);
 			}
@@ -1059,29 +1085,29 @@ public class GrammarMinilangParser extends Parser {
 			_localctx = new Variable_decl_idContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(109);
+			setState(112);
 			match(VAR);
-			setState(110);
+			setState(113);
 			match(ID);
-			setState(115);
+			setState(118);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__6) {
 				{
 				{
-				setState(111);
+				setState(114);
 				match(T__6);
-				setState(112);
+				setState(115);
 				match(ID);
 				}
 				}
-				setState(117);
+				setState(120);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(118);
+			setState(121);
 			match(T__7);
-			setState(119);
+			setState(122);
 			type_basic();
 			}
 		}
@@ -1139,18 +1165,18 @@ public class GrammarMinilangParser extends Parser {
 		PrintingContext _localctx = new PrintingContext(_ctx, getState());
 		enterRule(_localctx, 16, RULE_printing);
 		try {
-			setState(128);
+			setState(131);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,9,_ctx) ) {
 			case 1:
 				_localctx = new PrintExprContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(121);
+				setState(124);
 				match(PRINT);
-				setState(122);
+				setState(125);
 				expr(0);
-				setState(123);
+				setState(126);
 				match(NEWLINE);
 				}
 				break;
@@ -1158,11 +1184,11 @@ public class GrammarMinilangParser extends Parser {
 				_localctx = new PrintStringContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(125);
+				setState(128);
 				match(PRINT);
-				setState(126);
+				setState(129);
 				match(STRING);
-				setState(127);
+				setState(130);
 				match(NEWLINE);
 				}
 				break;
@@ -1201,7 +1227,7 @@ public class GrammarMinilangParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(130);
+			setState(133);
 			_la = _input.LA(1);
 			if ( !(_la==INT_TYPE || _la==STRING_TYPE) ) {
 			_errHandler.recoverInline(this);
@@ -1244,7 +1270,7 @@ public class GrammarMinilangParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(132);
+			setState(135);
 			match(ID);
 			}
 		}
@@ -1285,85 +1311,88 @@ public class GrammarMinilangParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001%\u0087\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001%\u008a\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0001\u0000\u0004\u0000\u0018"+
 		"\b\u0000\u000b\u0000\f\u0000\u0019\u0001\u0001\u0001\u0001\u0001\u0001"+
 		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
-		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0003\u0001"+
-		"*\b\u0001\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0003"+
-		"\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0003\u0003"+
-		"6\b\u0003\u0001\u0004\u0001\u0004\u0005\u0004:\b\u0004\n\u0004\f\u0004"+
-		"=\t\u0004\u0001\u0004\u0001\u0004\u0003\u0004A\b\u0004\u0001\u0005\u0001"+
-		"\u0005\u0001\u0005\u0001\u0005\u0001\u0006\u0001\u0006\u0001\u0006\u0001"+
-		"\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001"+
-		"\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0003\u0006U\b"+
-		"\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001"+
-		"\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001"+
-		"\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001"+
-		"\u0006\u0005\u0006i\b\u0006\n\u0006\f\u0006l\t\u0006\u0001\u0007\u0001"+
-		"\u0007\u0001\u0007\u0001\u0007\u0005\u0007r\b\u0007\n\u0007\f\u0007u\t"+
-		"\u0007\u0001\u0007\u0001\u0007\u0001\u0007\u0001\b\u0001\b\u0001\b\u0001"+
-		"\b\u0001\b\u0001\b\u0001\b\u0003\b\u0081\b\b\u0001\t\u0001\t\u0001\n\u0001"+
-		"\n\u0001\n\u0000\u0001\f\u000b\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010"+
-		"\u0012\u0014\u0000\u0005\u0001\u0000\u0011\u0012\u0001\u0000\u0013\u0014"+
-		"\u0001\u0000\u0018\u001b\u0001\u0000\u001c\u001d\u0001\u0000\u001e\u001f"+
-		"\u0093\u0000\u0017\u0001\u0000\u0000\u0000\u0002)\u0001\u0000\u0000\u0000"+
-		"\u0004+\u0001\u0000\u0000\u0000\u0006/\u0001\u0000\u0000\u0000\b@\u0001"+
-		"\u0000\u0000\u0000\nB\u0001\u0000\u0000\u0000\fT\u0001\u0000\u0000\u0000"+
-		"\u000em\u0001\u0000\u0000\u0000\u0010\u0080\u0001\u0000\u0000\u0000\u0012"+
-		"\u0082\u0001\u0000\u0000\u0000\u0014\u0084\u0001\u0000\u0000\u0000\u0016"+
-		"\u0018\u0003\u0002\u0001\u0000\u0017\u0016\u0001\u0000\u0000\u0000\u0018"+
-		"\u0019\u0001\u0000\u0000\u0000\u0019\u0017\u0001\u0000\u0000\u0000\u0019"+
-		"\u001a\u0001\u0000\u0000\u0000\u001a\u0001\u0001\u0000\u0000\u0000\u001b"+
-		"\u001c\u0003\n\u0005\u0000\u001c\u001d\u0005 \u0000\u0000\u001d*\u0001"+
-		"\u0000\u0000\u0000\u001e*\u0003\u0006\u0003\u0000\u001f*\u0003\u0004\u0002"+
-		"\u0000 *\u0005 \u0000\u0000!*\u0005\t\u0000\u0000\"*\u0005\n\u0000\u0000"+
-		"#$\u0003\u000e\u0007\u0000$%\u0005 \u0000\u0000%*\u0001\u0000\u0000\u0000"+
-		"&\'\u0003\u0010\b\u0000\'(\u0005 \u0000\u0000(*\u0001\u0000\u0000\u0000"+
-		")\u001b\u0001\u0000\u0000\u0000)\u001e\u0001\u0000\u0000\u0000)\u001f"+
-		"\u0001\u0000\u0000\u0000) \u0001\u0000\u0000\u0000)!\u0001\u0000\u0000"+
-		"\u0000)\"\u0001\u0000\u0000\u0000)#\u0001\u0000\u0000\u0000)&\u0001\u0000"+
-		"\u0000\u0000*\u0003\u0001\u0000\u0000\u0000+,\u0005\u0001\u0000\u0000"+
-		",-\u0003\f\u0006\u0000-.\u0003\b\u0004\u0000.\u0005\u0001\u0000\u0000"+
-		"\u0000/0\u0005\r\u0000\u000001\u0003\f\u0006\u000012\u0005\u000e\u0000"+
-		"\u000025\u0003\b\u0004\u000034\u0005\u0002\u0000\u000046\u0003\b\u0004"+
-		"\u000053\u0001\u0000\u0000\u000056\u0001\u0000\u0000\u00006\u0007\u0001"+
-		"\u0000\u0000\u00007;\u0005\u0003\u0000\u00008:\u0003\u0002\u0001\u0000"+
-		"98\u0001\u0000\u0000\u0000:=\u0001\u0000\u0000\u0000;9\u0001\u0000\u0000"+
-		"\u0000;<\u0001\u0000\u0000\u0000<>\u0001\u0000\u0000\u0000=;\u0001\u0000"+
-		"\u0000\u0000>A\u0005\u0004\u0000\u0000?A\u0003\u0002\u0001\u0000@7\u0001"+
-		"\u0000\u0000\u0000@?\u0001\u0000\u0000\u0000A\t\u0001\u0000\u0000\u0000"+
-		"BC\u0003\u0014\n\u0000CD\u0005\u000f\u0000\u0000DE\u0003\f\u0006\u0000"+
-		"E\u000b\u0001\u0000\u0000\u0000FG\u0006\u0006\uffff\uffff\u0000GH\u0005"+
-		"\u0005\u0000\u0000HI\u0003\f\u0006\u0000IJ\u0005\u0006\u0000\u0000JU\u0001"+
-		"\u0000\u0000\u0000KU\u0005%\u0000\u0000LU\u0005\"\u0000\u0000MU\u0005"+
-		"$\u0000\u0000NO\u0005\f\u0000\u0000OP\u0003\f\u0006\u0000PQ\u0003\f\u0006"+
-		"\u0004QU\u0001\u0000\u0000\u0000RS\u0005\u0015\u0000\u0000SU\u0003\f\u0006"+
-		"\u0003TF\u0001\u0000\u0000\u0000TK\u0001\u0000\u0000\u0000TL\u0001\u0000"+
-		"\u0000\u0000TM\u0001\u0000\u0000\u0000TN\u0001\u0000\u0000\u0000TR\u0001"+
-		"\u0000\u0000\u0000Uj\u0001\u0000\u0000\u0000VW\n\f\u0000\u0000WX\u0007"+
-		"\u0000\u0000\u0000Xi\u0003\f\u0006\rYZ\n\u000b\u0000\u0000Z[\u0007\u0001"+
-		"\u0000\u0000[i\u0003\f\u0006\f\\]\n\n\u0000\u0000]^\u0007\u0002\u0000"+
-		"\u0000^i\u0003\f\u0006\u000b_`\n\t\u0000\u0000`a\u0007\u0003\u0000\u0000"+
-		"ai\u0003\f\u0006\nbc\n\u0002\u0000\u0000cd\u0005\u0016\u0000\u0000di\u0003"+
-		"\f\u0006\u0003ef\n\u0001\u0000\u0000fg\u0005\u0017\u0000\u0000gi\u0003"+
-		"\f\u0006\u0002hV\u0001\u0000\u0000\u0000hY\u0001\u0000\u0000\u0000h\\"+
-		"\u0001\u0000\u0000\u0000h_\u0001\u0000\u0000\u0000hb\u0001\u0000\u0000"+
-		"\u0000he\u0001\u0000\u0000\u0000il\u0001\u0000\u0000\u0000jh\u0001\u0000"+
-		"\u0000\u0000jk\u0001\u0000\u0000\u0000k\r\u0001\u0000\u0000\u0000lj\u0001"+
-		"\u0000\u0000\u0000mn\u0005\u000b\u0000\u0000ns\u0005$\u0000\u0000op\u0005"+
-		"\u0007\u0000\u0000pr\u0005$\u0000\u0000qo\u0001\u0000\u0000\u0000ru\u0001"+
-		"\u0000\u0000\u0000sq\u0001\u0000\u0000\u0000st\u0001\u0000\u0000\u0000"+
-		"tv\u0001\u0000\u0000\u0000us\u0001\u0000\u0000\u0000vw\u0005\b\u0000\u0000"+
-		"wx\u0003\u0012\t\u0000x\u000f\u0001\u0000\u0000\u0000yz\u0005\u0010\u0000"+
-		"\u0000z{\u0003\f\u0006\u0000{|\u0005 \u0000\u0000|\u0081\u0001\u0000\u0000"+
-		"\u0000}~\u0005\u0010\u0000\u0000~\u007f\u0005\"\u0000\u0000\u007f\u0081"+
-		"\u0005 \u0000\u0000\u0080y\u0001\u0000\u0000\u0000\u0080}\u0001\u0000"+
-		"\u0000\u0000\u0081\u0011\u0001\u0000\u0000\u0000\u0082\u0083\u0007\u0004"+
-		"\u0000\u0000\u0083\u0013\u0001\u0000\u0000\u0000\u0084\u0085\u0005$\u0000"+
-		"\u0000\u0085\u0015\u0001\u0000\u0000\u0000\n\u0019)5;@Thjs\u0080";
+		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
+		"\u0001\u0001\u0001\u0001\u0003\u0001-\b\u0001\u0001\u0002\u0001\u0002"+
+		"\u0001\u0002\u0001\u0002\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003"+
+		"\u0001\u0003\u0001\u0003\u0003\u00039\b\u0003\u0001\u0004\u0001\u0004"+
+		"\u0005\u0004=\b\u0004\n\u0004\f\u0004@\t\u0004\u0001\u0004\u0001\u0004"+
+		"\u0003\u0004D\b\u0004\u0001\u0005\u0001\u0005\u0001\u0005\u0001\u0005"+
+		"\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006"+
+		"\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006"+
+		"\u0001\u0006\u0001\u0006\u0003\u0006X\b\u0006\u0001\u0006\u0001\u0006"+
+		"\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006"+
+		"\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006"+
+		"\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0006\u0005\u0006l\b\u0006"+
+		"\n\u0006\f\u0006o\t\u0006\u0001\u0007\u0001\u0007\u0001\u0007\u0001\u0007"+
+		"\u0005\u0007u\b\u0007\n\u0007\f\u0007x\t\u0007\u0001\u0007\u0001\u0007"+
+		"\u0001\u0007\u0001\b\u0001\b\u0001\b\u0001\b\u0001\b\u0001\b\u0001\b\u0003"+
+		"\b\u0084\b\b\u0001\t\u0001\t\u0001\n\u0001\n\u0001\n\u0000\u0001\f\u000b"+
+		"\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0000\u0005\u0001"+
+		"\u0000\u0011\u0012\u0001\u0000\u0013\u0014\u0001\u0000\u0018\u001b\u0001"+
+		"\u0000\u001c\u001d\u0001\u0000\u001e\u001f\u0097\u0000\u0017\u0001\u0000"+
+		"\u0000\u0000\u0002,\u0001\u0000\u0000\u0000\u0004.\u0001\u0000\u0000\u0000"+
+		"\u00062\u0001\u0000\u0000\u0000\bC\u0001\u0000\u0000\u0000\nE\u0001\u0000"+
+		"\u0000\u0000\fW\u0001\u0000\u0000\u0000\u000ep\u0001\u0000\u0000\u0000"+
+		"\u0010\u0083\u0001\u0000\u0000\u0000\u0012\u0085\u0001\u0000\u0000\u0000"+
+		"\u0014\u0087\u0001\u0000\u0000\u0000\u0016\u0018\u0003\u0002\u0001\u0000"+
+		"\u0017\u0016\u0001\u0000\u0000\u0000\u0018\u0019\u0001\u0000\u0000\u0000"+
+		"\u0019\u0017\u0001\u0000\u0000\u0000\u0019\u001a\u0001\u0000\u0000\u0000"+
+		"\u001a\u0001\u0001\u0000\u0000\u0000\u001b\u001c\u0003\n\u0005\u0000\u001c"+
+		"\u001d\u0005 \u0000\u0000\u001d-\u0001\u0000\u0000\u0000\u001e-\u0003"+
+		"\u0006\u0003\u0000\u001f-\u0003\u0004\u0002\u0000 -\u0005 \u0000\u0000"+
+		"!-\u0005\t\u0000\u0000\"-\u0005\n\u0000\u0000#$\u0003\u000e\u0007\u0000"+
+		"$%\u0005 \u0000\u0000%-\u0001\u0000\u0000\u0000&\'\u0003\u0010\b\u0000"+
+		"\'(\u0005 \u0000\u0000(-\u0001\u0000\u0000\u0000)*\u0003\f\u0006\u0000"+
+		"*+\u0005 \u0000\u0000+-\u0001\u0000\u0000\u0000,\u001b\u0001\u0000\u0000"+
+		"\u0000,\u001e\u0001\u0000\u0000\u0000,\u001f\u0001\u0000\u0000\u0000,"+
+		" \u0001\u0000\u0000\u0000,!\u0001\u0000\u0000\u0000,\"\u0001\u0000\u0000"+
+		"\u0000,#\u0001\u0000\u0000\u0000,&\u0001\u0000\u0000\u0000,)\u0001\u0000"+
+		"\u0000\u0000-\u0003\u0001\u0000\u0000\u0000./\u0005\u0001\u0000\u0000"+
+		"/0\u0003\f\u0006\u000001\u0003\b\u0004\u00001\u0005\u0001\u0000\u0000"+
+		"\u000023\u0005\r\u0000\u000034\u0003\f\u0006\u000045\u0005\u000e\u0000"+
+		"\u000058\u0003\b\u0004\u000067\u0005\u0002\u0000\u000079\u0003\b\u0004"+
+		"\u000086\u0001\u0000\u0000\u000089\u0001\u0000\u0000\u00009\u0007\u0001"+
+		"\u0000\u0000\u0000:>\u0005\u0003\u0000\u0000;=\u0003\u0002\u0001\u0000"+
+		"<;\u0001\u0000\u0000\u0000=@\u0001\u0000\u0000\u0000><\u0001\u0000\u0000"+
+		"\u0000>?\u0001\u0000\u0000\u0000?A\u0001\u0000\u0000\u0000@>\u0001\u0000"+
+		"\u0000\u0000AD\u0005\u0004\u0000\u0000BD\u0003\u0002\u0001\u0000C:\u0001"+
+		"\u0000\u0000\u0000CB\u0001\u0000\u0000\u0000D\t\u0001\u0000\u0000\u0000"+
+		"EF\u0003\u0014\n\u0000FG\u0005\u000f\u0000\u0000GH\u0003\f\u0006\u0000"+
+		"H\u000b\u0001\u0000\u0000\u0000IJ\u0006\u0006\uffff\uffff\u0000JK\u0005"+
+		"\u0005\u0000\u0000KL\u0003\f\u0006\u0000LM\u0005\u0006\u0000\u0000MX\u0001"+
+		"\u0000\u0000\u0000NX\u0005%\u0000\u0000OX\u0005\"\u0000\u0000PX\u0005"+
+		"$\u0000\u0000QR\u0005\f\u0000\u0000RS\u0003\f\u0006\u0000ST\u0003\f\u0006"+
+		"\u0004TX\u0001\u0000\u0000\u0000UV\u0005\u0015\u0000\u0000VX\u0003\f\u0006"+
+		"\u0003WI\u0001\u0000\u0000\u0000WN\u0001\u0000\u0000\u0000WO\u0001\u0000"+
+		"\u0000\u0000WP\u0001\u0000\u0000\u0000WQ\u0001\u0000\u0000\u0000WU\u0001"+
+		"\u0000\u0000\u0000Xm\u0001\u0000\u0000\u0000YZ\n\f\u0000\u0000Z[\u0007"+
+		"\u0000\u0000\u0000[l\u0003\f\u0006\r\\]\n\u000b\u0000\u0000]^\u0007\u0001"+
+		"\u0000\u0000^l\u0003\f\u0006\f_`\n\n\u0000\u0000`a\u0007\u0002\u0000\u0000"+
+		"al\u0003\f\u0006\u000bbc\n\t\u0000\u0000cd\u0007\u0003\u0000\u0000dl\u0003"+
+		"\f\u0006\nef\n\u0002\u0000\u0000fg\u0005\u0016\u0000\u0000gl\u0003\f\u0006"+
+		"\u0003hi\n\u0001\u0000\u0000ij\u0005\u0017\u0000\u0000jl\u0003\f\u0006"+
+		"\u0002kY\u0001\u0000\u0000\u0000k\\\u0001\u0000\u0000\u0000k_\u0001\u0000"+
+		"\u0000\u0000kb\u0001\u0000\u0000\u0000ke\u0001\u0000\u0000\u0000kh\u0001"+
+		"\u0000\u0000\u0000lo\u0001\u0000\u0000\u0000mk\u0001\u0000\u0000\u0000"+
+		"mn\u0001\u0000\u0000\u0000n\r\u0001\u0000\u0000\u0000om\u0001\u0000\u0000"+
+		"\u0000pq\u0005\u000b\u0000\u0000qv\u0005$\u0000\u0000rs\u0005\u0007\u0000"+
+		"\u0000su\u0005$\u0000\u0000tr\u0001\u0000\u0000\u0000ux\u0001\u0000\u0000"+
+		"\u0000vt\u0001\u0000\u0000\u0000vw\u0001\u0000\u0000\u0000wy\u0001\u0000"+
+		"\u0000\u0000xv\u0001\u0000\u0000\u0000yz\u0005\b\u0000\u0000z{\u0003\u0012"+
+		"\t\u0000{\u000f\u0001\u0000\u0000\u0000|}\u0005\u0010\u0000\u0000}~\u0003"+
+		"\f\u0006\u0000~\u007f\u0005 \u0000\u0000\u007f\u0084\u0001\u0000\u0000"+
+		"\u0000\u0080\u0081\u0005\u0010\u0000\u0000\u0081\u0082\u0005\"\u0000\u0000"+
+		"\u0082\u0084\u0005 \u0000\u0000\u0083|\u0001\u0000\u0000\u0000\u0083\u0080"+
+		"\u0001\u0000\u0000\u0000\u0084\u0011\u0001\u0000\u0000\u0000\u0085\u0086"+
+		"\u0007\u0004\u0000\u0000\u0086\u0013\u0001\u0000\u0000\u0000\u0087\u0088"+
+		"\u0005$\u0000\u0000\u0088\u0015\u0001\u0000\u0000\u0000\n\u0019,8>CWk"+
+		"mv\u0083";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

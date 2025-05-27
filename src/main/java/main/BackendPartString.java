@@ -2,8 +2,8 @@ package main;
 
 import org.antlr.v4.runtime.Token;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static main.Compiler.*;
 
@@ -15,7 +15,12 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
     }
 
     private static String current_register = "";
-    private final List<String> USED_REGISTER = new ArrayList<>();
+    //x1- register for returning values from different kind of expr
+    //x2- register for keeping first value of different kind of expr
+    //x3- register for keeping second value of different kind of expr
+    //x4- register for temp values during processing expressions
+
+    private HashSet<String> USED_REGISTER = new HashSet<>(Set.of("x1", "x2", "x3", "x4"));
 
     private String allocateRegister() {
         for (int i = 1; i <= 31; i++) {
@@ -69,7 +74,7 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
             if (!isNum(value)) {
                 throwError(ctx, String.format("Can't assign int variable %s. value '%s'\n", variableName, value));
             }
-            MEMORY_INTEGER.put(variableName, Integer.valueOf(value));
+            MEMORY_INTEGER.put(variableName, value);
             register = VARIABLE_REGISTER__MAP.get(variableName);
             RISC_CODE.add(String.format("# save value %s of variable %s into %s register", value, variableName, register));
             RISC_CODE.add("li " + register + ", " + value);
@@ -104,7 +109,7 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
         if (type.equals("string")) {
             MEMORY_STRING.put(newVariable, "");
         } else if (type.equals("int")) {
-            MEMORY_INTEGER.put(newVariable, 0);
+            MEMORY_INTEGER.put(newVariable, "0");
             String reg = allocateRegister();
             VARIABLE_REGISTER__MAP.put(newVariable, reg);
             RISC_CODE.add(String.format("# declare %s into %s register", newVariable, reg));
@@ -143,7 +148,42 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
     @Override
     public String visitMinValue(GrammarMinilangParser.MinValueContext ctx) {
-        return super.visitMinValue(ctx);
+        var exp1 = ctx.expr(0);
+        var exp2 = ctx.expr(1);
+        var operator = ctx.op;
+        if (!operator.getText().equals("min")) {
+            throw new RuntimeException("visitMinValue: Wrong operator name. Must be min");
+        }
+        var value1 = visit(exp1);
+        var value2 = visit(exp2);
+        if (!isNum(value1)) {
+            throw new RuntimeException(String.format("visitMinValue. Can't execute. First argument isn't number %s", value1));
+        }
+        if (!isNum(value2)) {
+            throw new RuntimeException(String.format("visitMinValue. Can't execute. Second argument isn't number %s", value2));
+        }
+
+        RISC_CODE.add("# start min operation");
+        RISC_CODE.add("# put first value into x2 register");
+        RISC_CODE.add(String.format("li x2, %s", value1));
+        RISC_CODE.add("# put second value into x3 register");
+        RISC_CODE.add(String.format("li x3, %s", value2));
+        RISC_CODE.add("# x1 = (x2 < x3) ? 1 : 0");
+        RISC_CODE.add("slt x1, x2, x3");
+        RISC_CODE.add("# x4 = (x1 == 1) ? -1 : 0 (маска)");
+        RISC_CODE.add("li x4, 0");
+        RISC_CODE.add("sub x4, x0, x1");
+        RISC_CODE.add(String.format("# if x4 == 1 then first argument(x2) is min. %s ",value1));
+        RISC_CODE.add("and x2, x2, x4");
+        RISC_CODE.add("# invert mask ");
+        RISC_CODE.add("not x4,x4");
+        RISC_CODE.add(String.format("# if x4 == 0 then second argument(x3) is min. %s ",value2));
+        RISC_CODE.add("and x3, x3, x4");
+        RISC_CODE.add("# put result into x1");
+        RISC_CODE.add("li x1, 0");
+        RISC_CODE.add("or x1, x2, x3");
+
+        return "0";
     }
 
     @Override
@@ -173,10 +213,10 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
             return MEMORY_STRING.get(id);
         }
         if (MEMORY_INTEGER.containsKey(id)) {
-            Integer value = MEMORY_INTEGER.get(id);
+            String value = MEMORY_INTEGER.get(id);
             String register = VARIABLE_REGISTER__MAP.get(id);
-            RISC_CODE.add(String.format("# take value %d from register %s(store %s)", value, register, id));
-            return String.valueOf(value);
+            RISC_CODE.add(String.format("# take value %s from register %s(store %s)", value, register, id));
+            return value;
         }
         throw new RuntimeException(String.format("variable doesn't exist %s\n", id));
     }
@@ -205,10 +245,6 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
         return super.visitMulDiv(ctx);
     }
 
-    @Override
-    public String visitVariable_decl_id(GrammarMinilangParser.Variable_decl_idContext ctx) {
-        return super.visitVariable_decl_id(ctx);
-    }
 
     @Override
     public String visitPrintExpr(GrammarMinilangParser.PrintExprContext ctx) {
@@ -221,12 +257,8 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
     }
 
     @Override
-    public String visitType_basic(GrammarMinilangParser.Type_basicContext ctx) {
-        return super.visitType_basic(ctx);
-    }
-
-    @Override
     public String visitLeft_expr(GrammarMinilangParser.Left_exprContext ctx) {
+        //Need to rewrite when become more than 1 option in grammar for left_expr.
         return super.visitLeft_expr(ctx);
     }
 

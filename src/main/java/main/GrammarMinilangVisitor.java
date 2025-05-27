@@ -74,6 +74,13 @@ public interface GrammarMinilangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPrintSmth(GrammarMinilangParser.PrintSmthContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code expr_action}
+	 * labeled alternative in {@link GrammarMinilangParser#stat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpr_action(GrammarMinilangParser.Expr_actionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link GrammarMinilangParser#whileStat}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

@@ -82,6 +82,13 @@ public class GrammarMinilangBaseVisitor<T> extends AbstractParseTreeVisitor<T> i
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitExpr_action(GrammarMinilangParser.Expr_actionContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitWhileStat(GrammarMinilangParser.WhileStatContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

@@ -18,7 +18,7 @@ public class Compiler {
     public static final Map<String, String> VARIABLE_REGISTER__MAP = new HashMap<>();
 
 
-    public static final Map<String, Integer> MEMORY_INTEGER = new HashMap<>();
+    public static final Map<String, String> MEMORY_INTEGER = new HashMap<>();
 
     /**
      * private static void printTree(Tree tree, int indent) {

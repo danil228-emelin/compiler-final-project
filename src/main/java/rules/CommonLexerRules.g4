@@ -1,11 +1,8 @@
 lexer grammar CommonLexerRules;
 
 LINE_COMMENT : ':>' .*? '\r'? '\n' -> skip ;
-
 COMMENT : '/*' .*? '*/' -> skip ; // Match "/*" stuff "*/"
-
 VAR: 'var';
-
 MIN: 'min';
 IF: 'if';
 THEN: 'then';
@@ -25,22 +22,13 @@ LE  : '<=' ;
 EQ  : '==' ;
 NE  : '!=' ;
 INT_TYPE : 'int';
-
 STRING_TYPE : 'string';
-
-
 NEWLINE:'\r'? '\n' ;   // return newlines to parser (end-statement signal)
-
 WS  :   [ \t]+ -> skip ; // toss out whitespace
-
 STRING: '"' (ESC|.)*? '"' ;
-
 ESC : '\\"' | '\\\\' ; // 2-char sequences \" and \\
-
 ID : ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')* ;
-
 INT : '-'?[0-9]+ ; // match integers
-
 type_basic
         : INT_TYPE
         | STRING_TYPE

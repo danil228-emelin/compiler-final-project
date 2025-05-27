@@ -1,5 +1,7 @@
 :> program on minilang language
 var a : int
-var b :int
+var b : int
 a = b
 a = -3
+min 2 3
+
