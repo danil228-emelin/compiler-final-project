@@ -420,7 +420,7 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
                 ? value1.equals(value2)
                 : !value1.equals(value2);
 
-        return String.valueOf(result ? 1 : 0); // Возвращаем 1/0 как в RISC-V
+        return String.valueOf(result ? 1 : 0);
     }
 
     @Override
@@ -474,8 +474,28 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
     @Override
     public String visitPrintExpr(GrammarMinilangParser.PrintExprContext ctx) {
-        return super.visitPrintExpr(ctx);
+        String exprValue = visit(ctx.expr());
+
+        RISC_CODE.add("# print expression result");
+
+        if (!isNum(exprValue)) {
+            throw new RuntimeException(String.format(
+                    "visitPrintExpr: argument isn't a number: %s", exprValue));
+
+        }
+        RISC_CODE.add("# load integer value into a0");
+        RISC_CODE.add(String.format("li a0, %s", exprValue));
+
+        RISC_CODE.add("# prepare syscall for printing integer");
+        RISC_CODE.add("li a7, 1");
+        RISC_CODE.add("ecall");
+        RISC_CODE.add("# print newline");
+        RISC_CODE.add("li a0, 10");  // ASCII код '\n'
+        RISC_CODE.add("li a7, 11");   // syscall code for print_char
+        RISC_CODE.add("ecall");
+        return exprValue;
     }
+
 
     @Override
     public String visitPrintString(GrammarMinilangParser.PrintStringContext ctx) {
