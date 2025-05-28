@@ -20,7 +20,7 @@ block: '{' stat+ '}'                # multiple_logic_block
 
 whileStat:  WHILE expr block ;
 
-ifStat: IF expr THEN  block (ELSE block) ? ;
+ifStat: IF expr THEN block (ELSE block)? ;
 
 assignSt: left_expr ASSIGN expr ;
 

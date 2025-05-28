@@ -101,6 +101,9 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
         }
         var ifBlock = ctx.ifStat().block(0);
         var elseBlock = ctx.ifStat().block(1);
+        System.out.println(ifBlock.getText());
+        System.out.println(ctx.getText());
+
 
         RISC_CODE.add("# load condition value");
         RISC_CODE.add(String.format("li x2, %s", condValue));
@@ -108,15 +111,12 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
         if (condValueInt > 0) {
             RISC_CODE.add("# execute then block");
             visit(ifBlock);
-        }
-
-        if (condValueInt > 0 && elseBlock != null) {
+        } else if (elseBlock != null) {
             RISC_CODE.add("j " + endLabel);
             RISC_CODE.add(elseLabel + ":");
             RISC_CODE.add("# execute else block");
             visit(elseBlock);
         }
-
         RISC_CODE.add(endLabel + ":");
         RISC_CODE.add("# end if");
 
@@ -168,7 +168,7 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
     @Override
     public String visitMultiple_logic_block(GrammarMinilangParser.Multiple_logic_blockContext ctx) {
-        int i=1;
+        int i = 1;
         for (GrammarMinilangParser.StatContext stat : ctx.stat()) {
             String statementResult = visit(stat);
             i++;
@@ -178,8 +178,8 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
     @Override
     public String visitSingle_logic_block(GrammarMinilangParser.Single_logic_blockContext ctx) {
-        System.out.println("visitSingle_logic_block");
-        return super.visitSingle_logic_block(ctx);
+        visit(ctx.stat());
+        return "";
     }
 
 

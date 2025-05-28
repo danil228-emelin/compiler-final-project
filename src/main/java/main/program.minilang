@@ -1,7 +1,8 @@
 :> program on minilang language
 
-if 1 then {
-print 1
-print 23
+if 2>3 then {
+print 10
+} else {
+print 25
 }
 
