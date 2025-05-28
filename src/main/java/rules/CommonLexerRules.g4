@@ -6,6 +6,8 @@ VAR: 'var';
 MIN: 'min';
 IF: 'if';
 THEN: 'then';
+ELSE: 'else';
+WHILE: 'while';
 ASSIGN: '=' ;
 PRINT: 'print';
 MUL : '*' ;

@@ -3,26 +3,26 @@ import CommonLexerRules;
 
 prog:   stat+ ;
 
-stat:   assignSt NEWLINE            # assign
+stat:   assignSt NEWLINE?            # assign
     |   ifStat                      # ifStatement
     |   whileStat                   # whileStatement
     |   NEWLINE                     # blank
     | LINE_COMMENT                  # comment
     | COMMENT                       # multipleComment
-    | variable_decl NEWLINE         # declaration
-    | printing NEWLINE              # printSmth
-    | expr NEWLINE                  #expr_action
+    | variable_decl NEWLINE?         # declaration
+    | printing NEWLINE?              # printSmth
+    | expr NEWLINE?                  #expr_action
     ;
 
-whileStat:  'while' expr block ;
-
-ifStat: IF expr THEN block ('else' block)? ;
-
-block: '{' stat* '}'                # multiple_logic_block
+block: '{' stat+ '}'                # multiple_logic_block
         | stat                      # single_logic_block
         ;
 
-assignSt: left_expr ASSIGN expr;
+whileStat:  WHILE expr block ;
+
+ifStat: IF expr THEN  block (ELSE block) ? ;
+
+assignSt: left_expr ASSIGN expr ;
 
 expr: expr op=(MUL|DIV) expr         # mulDiv
     |   expr op=(ADD|SUB) expr         # addSub

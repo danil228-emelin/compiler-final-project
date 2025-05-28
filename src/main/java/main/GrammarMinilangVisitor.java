@@ -81,18 +81,6 @@ public interface GrammarMinilangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpr_action(GrammarMinilangParser.Expr_actionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link GrammarMinilangParser#whileStat}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitWhileStat(GrammarMinilangParser.WhileStatContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link GrammarMinilangParser#ifStat}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIfStat(GrammarMinilangParser.IfStatContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code multiple_logic_block}
 	 * labeled alternative in {@link GrammarMinilangParser#block}.
 	 * @param ctx the parse tree
@@ -106,6 +94,18 @@ public interface GrammarMinilangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSingle_logic_block(GrammarMinilangParser.Single_logic_blockContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GrammarMinilangParser#whileStat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhileStat(GrammarMinilangParser.WhileStatContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link GrammarMinilangParser#ifStat}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfStat(GrammarMinilangParser.IfStatContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GrammarMinilangParser#assignSt}.
 	 * @param ctx the parse tree

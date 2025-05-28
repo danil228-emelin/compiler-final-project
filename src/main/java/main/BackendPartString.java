@@ -19,6 +19,7 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
     //x2- register for keeping first value of different kind of expr
     //x3- register for keeping second value of different kind of expr
     //x4- register for temp values during processing expressions
+    private static int labelCounter = 1;
 
     private HashSet<String> USED_REGISTER = new HashSet<>(Set.of("x1", "x2", "x3", "x4"));
 
@@ -67,7 +68,7 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
         if (MEMORY_STRING.containsKey(variableName)) {
             RISC_CODE.add("la a0, " + value + "_str\n");
             RISC_CODE.add("mv a1, " + value + "\n");
-            RISC_CODE.add("jal ra, strcpy"); // Вызываем функцию копирования строк
+            RISC_CODE.add("jal ra, strcpy");
             freeRegister(register);
             return "visitAssign";
         } else if (MEMORY_INTEGER.containsKey(variableName)) {
@@ -89,7 +90,37 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
     @Override
     public String visitIfStatement(GrammarMinilangParser.IfStatementContext ctx) {
-        return super.visitIfStatement(ctx);
+        String elseLabel = "else_" + labelCounter++;
+        String endLabel = "endif_" + labelCounter++;
+
+        String condValue = visit(ctx.ifStat().expr());
+        RISC_CODE.add("# if condition evaluation");
+        int condValueInt = Integer.parseInt(condValue);
+        if (!isNum(condValue)) {
+            throw new RuntimeException("If condition must be numeric expression");
+        }
+        var ifBlock = ctx.ifStat().block(0);
+        var elseBlock = ctx.ifStat().block(1);
+
+        RISC_CODE.add("# load condition value");
+        RISC_CODE.add(String.format("li x2, %s", condValue));
+        RISC_CODE.add("beqz x2, " + (elseBlock != null ? elseLabel : endLabel));
+        if (condValueInt > 0) {
+            RISC_CODE.add("# execute then block");
+            visit(ifBlock);
+        }
+
+        if (condValueInt > 0 && elseBlock != null) {
+            RISC_CODE.add("j " + endLabel);
+            RISC_CODE.add(elseLabel + ":");
+            RISC_CODE.add("# execute else block");
+            visit(elseBlock);
+        }
+
+        RISC_CODE.add(endLabel + ":");
+        RISC_CODE.add("# end if");
+
+        return "";
     }
 
     @Override
@@ -137,11 +168,17 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
     @Override
     public String visitMultiple_logic_block(GrammarMinilangParser.Multiple_logic_blockContext ctx) {
-        return super.visitMultiple_logic_block(ctx);
+        int i=1;
+        for (GrammarMinilangParser.StatContext stat : ctx.stat()) {
+            String statementResult = visit(stat);
+            i++;
+        }
+        return "1";
     }
 
     @Override
     public String visitSingle_logic_block(GrammarMinilangParser.Single_logic_blockContext ctx) {
+        System.out.println("visitSingle_logic_block");
         return super.visitSingle_logic_block(ctx);
     }
 
@@ -212,7 +249,6 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
         String leftValue = visit(ctx.expr(0));
         String rightValue = visit(ctx.expr(1));
 
-        // Проверка типов
         if (!isNum(leftValue) || !isNum(rightValue)) {
             throw new RuntimeException(String.format(
                     "Logical AND requires numeric arguments, got: %s and %s",
@@ -273,7 +309,6 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
             RISC_CODE.add("sub x1, x2, x3");
         }
 
-        // Возвращаем результат вычислений
         int result = operator.getText().equals("+")
                 ? Integer.parseInt(value1) + Integer.parseInt(value2)
                 : Integer.parseInt(value1) - Integer.parseInt(value2);
@@ -335,7 +370,6 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
                 break;
         }
 
-        // Calculate boolean result for return
         int num1 = Integer.parseInt(value1);
         int num2 = Integer.parseInt(value2);
         boolean result;
@@ -356,7 +390,7 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
                 throw new AssertionError();
         }
 
-        return String.valueOf(result ? 1 : 0);  // RISC-V uses 1/0 for true/false
+        return String.valueOf(result ? 1 : 0);
     }
 
     @Override
@@ -399,7 +433,6 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
 
         RISC_CODE.add("# equality operation " + operator.getText());
 
-        // Загрузка значений в регистры
         RISC_CODE.add("# load first value into x2");
         RISC_CODE.add(String.format("li x2, %s", value1));
         RISC_CODE.add("# load second value into x3");
@@ -415,7 +448,6 @@ public class BackendPartString extends GrammarMinilangBaseVisitor<String> {
             RISC_CODE.add("snez x1, x1");
         }
 
-        // Вычисление результата для семантического анализа
         boolean result = operator.getText().equals("==")
                 ? value1.equals(value2)
                 : !value1.equals(value2);
