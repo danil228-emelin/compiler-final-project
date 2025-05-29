@@ -69,8 +69,8 @@ public class BackendPart extends GrammarMinilangBaseVisitor<String> {
         String register = "x1";
 
         if (MEMORY_STRING.containsKey(variableName)) {
-            RISC_CODE.add("la a0, " + value + "_str\n");
-            RISC_CODE.add("mv a1, " + value + "\n");
+            RISC_CODE.add("la x0, " + value + "_str\n");
+            RISC_CODE.add("mv x1, " + value + "\n");
             RISC_CODE.add("jal ra, strcpy");
             freeRegister(register);
             return "visitAssign";
@@ -576,6 +576,7 @@ public class BackendPart extends GrammarMinilangBaseVisitor<String> {
                     "visitPrintExpr: argument isn't a number: %s", exprValue));
 
         }
+        //RISC CALL. USE a instead of x
         RISC_CODE.add("# load integer value into a0");
         RISC_CODE.add(String.format("li a0, %s", exprValue));
 
