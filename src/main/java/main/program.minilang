@@ -1,7 +1,4 @@
 :> program on minilang language
-var b : int
-b = 4
-while b>0 {
-print 1
-__cond = -1
-}
+var x: int
+x = 5
+print x

@@ -186,7 +186,7 @@ public class BackendPart extends GrammarMinilangBaseVisitor<String> {
         RISC_CODE.add("# save resulted value expr into " + whileInfo.while_statement_register_holder);
         RISC_CODE.add(String.format("add %s, %s, x1", whileInfo.while_statement_register_holder, whileInfo.while_statement_register_holder));
 
-        return "";
+        return res;
     }
 
     @Override
@@ -209,21 +209,6 @@ public class BackendPart extends GrammarMinilangBaseVisitor<String> {
             throwError(ctx, String.format("Unsupported %s type\n", type));
         }
         return "visitDeclaration";
-    }
-
-    @Override
-    public String visitPrintSmth(GrammarMinilangParser.PrintSmthContext ctx) {
-        return super.visitPrintSmth(ctx);
-    }
-
-    @Override
-    public String visitWhileStat(GrammarMinilangParser.WhileStatContext ctx) {
-        return super.visitWhileStat(ctx);
-    }
-
-    @Override
-    public String visitIfStat(GrammarMinilangParser.IfStatContext ctx) {
-        return super.visitIfStat(ctx);
     }
 
     @Override

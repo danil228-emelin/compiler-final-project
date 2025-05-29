@@ -16,26 +16,7 @@ public class Compiler {
     public static final Map<String, String> MEMORY_STRING = new HashMap<>();
     public static final List<String> DATA_SECTION = new ArrayList<>();
     public static final Map<String, String> VARIABLE_REGISTER__MAP = new HashMap<>();
-
     public static final Map<String, String> MEMORY_INTEGER = new HashMap<>();
-
-    /**
-     * private static void printTree(Tree tree, int indent) {
-     * String nodeName = tree.getClass().getSimpleName().replace("Context", "");
-     * if (nodeName.isEmpty()) nodeName = tree.getClass().getSimpleName();
-     * <p>
-     * StringBuilder sb = new StringBuilder();
-     * for (int i = 0; i < indent; i++) {
-     * sb.append("|   ");
-     * }
-     * sb.append(nodeName).append(": ").append(tree.getText().replace("\n", "\\n"));
-     * System.out.println(sb.toString());
-     * <p>
-     * for (int i = 0; i < tree.getChildCount(); i++) {
-     * printTree(tree.getChild(i), indent + 1);
-     * }
-     * }
-     **/
 
     public static void main(String[] args) throws Exception {
         String inputFile;
@@ -74,6 +55,10 @@ public class Compiler {
         try {
             BackendPart evalVisitorString = new BackendPart();
             evalVisitorString.visit(tree);
+            System.out.println("\nAbstract Syntax Tree (AST):");
+            ASTPrinter printer = new ASTPrinter();
+            printer.visit(tree);
+            System.out.println();
             RISC_CODE.add("# exit");
             RISC_CODE.add("li a7, 93");
             RISC_CODE.add("ecall");
