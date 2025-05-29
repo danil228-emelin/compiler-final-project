@@ -36,6 +36,8 @@ expr: expr op=(MUL|DIV) expr         # mulDiv
     |   op=NOT expr                    # logicalNot
     |   expr op=AND expr               # logicalAnd
     |   expr op=OR expr                # logicalOr
+    |   COND_WHILE                     # cond_value
+    |   COND_WHILE '=' expr            # cond_value_expr
     ;
 
 

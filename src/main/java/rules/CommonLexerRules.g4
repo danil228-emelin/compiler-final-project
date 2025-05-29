@@ -4,6 +4,7 @@ LINE_COMMENT : ':>' .*? '\r'? '\n' -> skip ;
 COMMENT : '/*' .*? '*/' -> skip ; // Match "/*" stuff "*/"
 VAR: 'var';
 MIN: 'min';
+COND_WHILE: '__cond';
 IF: 'if';
 THEN: 'then';
 ELSE: 'else';

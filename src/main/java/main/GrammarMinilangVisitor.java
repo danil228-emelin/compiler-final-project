@@ -120,13 +120,6 @@ public interface GrammarMinilangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParens(GrammarMinilangParser.ParensContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code minValue}
-	 * labeled alternative in {@link GrammarMinilangParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMinValue(GrammarMinilangParser.MinValueContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code logicalNot}
 	 * labeled alternative in {@link GrammarMinilangParser#expr}.
 	 * @param ctx the parse tree
@@ -147,6 +140,34 @@ public interface GrammarMinilangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAddSub(GrammarMinilangParser.AddSubContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code mulDiv}
+	 * labeled alternative in {@link GrammarMinilangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMulDiv(GrammarMinilangParser.MulDivContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code minValue}
+	 * labeled alternative in {@link GrammarMinilangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMinValue(GrammarMinilangParser.MinValueContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code cond_value}
+	 * labeled alternative in {@link GrammarMinilangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCond_value(GrammarMinilangParser.Cond_valueContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code cond_value_expr}
+	 * labeled alternative in {@link GrammarMinilangParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCond_value_expr(GrammarMinilangParser.Cond_value_exprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code relational}
 	 * labeled alternative in {@link GrammarMinilangParser#expr}.
@@ -182,13 +203,6 @@ public interface GrammarMinilangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitEquality(GrammarMinilangParser.EqualityContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code mulDiv}
-	 * labeled alternative in {@link GrammarMinilangParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMulDiv(GrammarMinilangParser.MulDivContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code variable_decl_id}
 	 * labeled alternative in {@link GrammarMinilangParser#variable_decl}.

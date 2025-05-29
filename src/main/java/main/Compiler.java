@@ -72,7 +72,7 @@ public class Compiler {
         RISC_CODE.add("main:");
 
         try {
-            BackendPartString evalVisitorString = new BackendPartString();
+            BackendPart evalVisitorString = new BackendPart();
             evalVisitorString.visit(tree);
             RISC_CODE.add("# exit");
             RISC_CODE.add("li a7, 93");

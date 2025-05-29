@@ -1,8 +1,7 @@
 :> program on minilang language
-
-if 2>3 then {
-print 10
-} else {
-print 25
+var b : int
+b = 4
+while b>0 {
+print 1
+__cond = -1
 }
-
