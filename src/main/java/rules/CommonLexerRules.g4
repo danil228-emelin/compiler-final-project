@@ -28,8 +28,12 @@ INT_TYPE : 'int';
 STRING_TYPE : 'string';
 NEWLINE:'\r'? '\n' ;   // return newlines to parser (end-statement signal)
 WS  :   [ \t]+ -> skip ; // toss out whitespace
-STRING: '"' (ESC|.)*? '"' ;
-ESC : '\\"' | '\\\\' ; // 2-char sequences \" and \\
+// Strings (in quotes) with escape sequences
+
+STRING    : '"' ( ESC_SEQ | ~('\\'|'"') )* '"' ;
+
+ESC_SEQ   : '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\''|'\\') ;
+
 ID : ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')* ;
 INT : '-'?[0-9]+ ; // match integers
 type_basic

@@ -15,8 +15,11 @@ public class Compiler {
     public static final List<String> RISC_CODE = new ArrayList<>();
     public static final Map<String, String> MEMORY_STRING = new HashMap<>();
     public static final List<String> DATA_SECTION = new ArrayList<>();
+
     public static final Map<String, String> VARIABLE_REGISTER__MAP = new HashMap<>();
     public static final Map<String, String> MEMORY_INTEGER = new HashMap<>();
+    public static final Map<String, String> STRING_NAME_IN_DATA_SECTION = new HashMap<>();
+
 
     public static void main(String[] args) throws Exception {
         String inputFile;
@@ -52,6 +55,11 @@ public class Compiler {
         RISC_CODE.add(".text");
         RISC_CODE.add("main:");
 
+
+
+
+
+
         try {
             BackendPart evalVisitorString = new BackendPart();
             evalVisitorString.visit(tree);
@@ -73,7 +81,5 @@ public class Compiler {
             e.printStackTrace(System.err);
             System.exit(1);
         }
-
-
     }
 }

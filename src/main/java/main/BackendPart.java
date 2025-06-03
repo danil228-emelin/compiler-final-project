@@ -23,6 +23,7 @@ public class BackendPart extends GrammarMinilangBaseVisitor<String> {
     //x3- register for keeping second value of different kind of expr
     //x4- register for temp values during processing expressions
     private static int labelCounter = 1;
+    private static int String_unique_id_for_decl = 1;
 
     private HashSet<String> USED_REGISTER = new HashSet<>(Set.of("x1", "x2", "x3", "x4"));
 
@@ -465,7 +466,7 @@ public class BackendPart extends GrammarMinilangBaseVisitor<String> {
             RISC_CODE.add("addi x1, zero, " + string_rep);
             return string_rep;
         }
-        throw new RuntimeException("visitValue: Can't assing strings yet");
+        return string_rep;
     }
 
     @Override
@@ -549,6 +550,42 @@ public class BackendPart extends GrammarMinilangBaseVisitor<String> {
         return String.valueOf(result);
     }
 
+    @Override
+    public String visitPrintSmth(GrammarMinilangParser.PrintSmthContext ctx) {
+        return super.visitPrintSmth(ctx);
+    }
+
+    @Override
+    public String visitPrintString(GrammarMinilangParser.PrintStringContext ctx) {
+        String str_to_print = ctx.STRING().getText();
+        String id_in_data_sec = "str_" + Integer.toString(String_unique_id_for_decl);
+        STRING_NAME_IN_DATA_SECTION.put(str_to_print, id_in_data_sec);
+        String_unique_id_for_decl += 1;
+
+        DATA_SECTION.add(String.format("%s:  .asciz %s ", id_in_data_sec, str_to_print));
+        RISC_CODE.add(String.format("la x2, %s",id_in_data_sec));
+        RISC_CODE.add("mv x3, zero");
+        RISC_CODE.add(" # must put into x2 address of string");
+        RISC_CODE.add(" # x3 - length counter, must be zero");
+        RISC_CODE.add(" # x1 - resulted length will be here");
+
+        RISC_CODE.add("strlen:");
+        RISC_CODE.add("  lb x4, 0(x2)"); // Загружаем символ
+        RISC_CODE.add("  beqz x4, end_strlen"); // Если нуль-терминатор
+        RISC_CODE.add("  addi x2, x2, 1"); // Следующий символ
+        RISC_CODE.add("  addi x3, x3, 1"); // Увеличиваем счетчик
+        RISC_CODE.add("  j strlen");
+        RISC_CODE.add("  end_strlen:");
+        RISC_CODE.add("  addi x1, x3, 0");
+
+        RISC_CODE.add("li a7, 64"); // Номер syscall (write)
+        RISC_CODE.add("li a0, 1"); //  Файловый дескриптор (1 = stdout)
+        RISC_CODE.add(String.format("la a1, %s",id_in_data_sec)); // Адрес строки
+        RISC_CODE.add("addi x1, x1, 1"); // Учет null terminator в длинне строки
+        RISC_CODE.add("addi a2, x1, 0"); // Длина строки.
+        RISC_CODE.add("ecall");
+        return str_to_print;
+    }
 
     @Override
     public String visitPrintExpr(GrammarMinilangParser.PrintExprContext ctx) {
@@ -573,13 +610,6 @@ public class BackendPart extends GrammarMinilangBaseVisitor<String> {
         RISC_CODE.add("li a7, 11");
         RISC_CODE.add("ecall");
         return exprValue;
-    }
-
-
-    @Override
-    public String visitPrintString(GrammarMinilangParser.PrintStringContext ctx) {
-        throw new RuntimeException("Currently not supported");
-        //return super.visitPrintString(ctx);
     }
 
     @Override

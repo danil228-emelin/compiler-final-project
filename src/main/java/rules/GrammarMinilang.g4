@@ -24,6 +24,12 @@ ifStat: IF expr THEN block (ELSE block)? ;
 
 assignSt: left_expr ASSIGN expr ;
 
+
+printing: PRINT STRING NEWLINE # printString
+    |  PRINT expr NEWLINE # printExpr
+
+    ;
+
 expr: expr op=(MUL|DIV) expr         # mulDiv
     |   expr op=(ADD|SUB) expr         # addSub
     |   expr op=(LT|GT|LE|GE) expr # relational
@@ -45,7 +51,4 @@ variable_decl
         : VAR ID (',' ID )* ':' type_basic # variable_decl_id
         ;
 
-printing: PRINT expr NEWLINE # printExpr
-    |  PRINT STRING NEWLINE # printString
-    ;
 

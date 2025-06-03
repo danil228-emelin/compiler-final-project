@@ -113,6 +113,20 @@ public interface GrammarMinilangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssignSt(GrammarMinilangParser.AssignStContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code printString}
+	 * labeled alternative in {@link GrammarMinilangParser#printing}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrintString(GrammarMinilangParser.PrintStringContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code printExpr}
+	 * labeled alternative in {@link GrammarMinilangParser#printing}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrintExpr(GrammarMinilangParser.PrintExprContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code parens}
 	 * labeled alternative in {@link GrammarMinilangParser#expr}.
 	 * @param ctx the parse tree
@@ -210,20 +224,6 @@ public interface GrammarMinilangVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitVariable_decl_id(GrammarMinilangParser.Variable_decl_idContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code printExpr}
-	 * labeled alternative in {@link GrammarMinilangParser#printing}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPrintExpr(GrammarMinilangParser.PrintExprContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code printString}
-	 * labeled alternative in {@link GrammarMinilangParser#printing}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPrintString(GrammarMinilangParser.PrintStringContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link GrammarMinilangParser#type_basic}.
 	 * @param ctx the parse tree
