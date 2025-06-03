@@ -316,3 +316,166 @@ ecall
 li a7, 93
 ecall
 ![img_1.png](img_1.png)
+````
+## Пример program.minilang Подсчет факториал. (Без комментариев)
+```minilang
+:> program on minilang language
+var result : int
+var n : int
+result = 1
+n = 4
+while n>0 {
+result = result * n
+n = n-1
+}
+print result
+```
+## Генерация кода:
+```
+Abstract Syntax Tree (AST):
+Prog [
+  Declaration [
+    Variable_decl_id [
+      TERMINAL: var
+      TERMINAL: result
+      TERMINAL: :
+      Type_basic [
+        TERMINAL: int
+      ]
+    ]
+    TERMINAL: 
+
+  ]
+  Declaration [
+    Variable_decl_id [
+      TERMINAL: var
+      TERMINAL: n
+      TERMINAL: :
+      Type_basic [
+        TERMINAL: int
+      ]
+    ]
+    TERMINAL: 
+
+  ]
+  Assign [
+    AssignSt [
+      Left_expr [
+        TERMINAL: result
+      ]
+      TERMINAL: =
+      Value [
+        TERMINAL: 1
+      ]
+    ]
+    TERMINAL: 
+
+  ]
+  Assign [
+    AssignSt [
+      Left_expr [
+        TERMINAL: n
+      ]
+      TERMINAL: =
+      Value [
+        TERMINAL: 2
+      ]
+    ]
+    TERMINAL: 
+
+  ]
+  WhileStatement [
+    WhileStat [
+      TERMINAL: while
+      Relational [
+        Id [
+          TERMINAL: n
+        ]
+        TERMINAL: >
+        Value [
+          TERMINAL: 0
+        ]
+      ]
+      Multiple_logic_block [
+        TERMINAL: {
+        Blank [
+          TERMINAL: 
+
+        ]
+        Assign [
+          AssignSt [
+            Left_expr [
+              TERMINAL: result
+            ]
+            TERMINAL: =
+            MulDiv [
+              Id [
+                TERMINAL: result
+              ]
+              TERMINAL: *
+              Id [
+                TERMINAL: n
+              ]
+            ]
+          ]
+          TERMINAL: 
+
+        ]
+        Assign [
+          AssignSt [
+            Left_expr [
+              TERMINAL: n
+            ]
+            TERMINAL: =
+            Id [
+              TERMINAL: n
+            ]
+          ]
+        ]
+        Expr_action [
+          Value [
+            TERMINAL: -1
+          ]
+          TERMINAL: 
+
+        ]
+        TERMINAL: }
+      ]
+    ]
+  ]
+  Blank [
+    TERMINAL: 
+
+  ]
+  PrintSmth [
+    PrintExpr [
+      TERMINAL: print
+      Id [
+        TERMINAL: result
+      ]
+      TERMINAL: 
+
+    ]
+  ]
+]
+.global main
+.text
+main:
+    li x5, 1
+    li x6, 4
+while_start:
+    blez x6, while_end  
+    mul x5, x5, x6  
+    addi x6, x6, -1
+    j while_start
+while_end:
+    mv a0, x5       
+    li a7, 1
+    ecall
+    li a0, 10       
+    li a7, 11    
+    ecall
+    li a7, 93       
+    ecall
+````
+![img_3.png](img_3.png)
